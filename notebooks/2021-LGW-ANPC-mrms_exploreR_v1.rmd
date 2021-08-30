@@ -71,7 +71,7 @@ QC check 1:
 ```{r, summed_TIC_checkR,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
 setwd(project_dir)
 
-summed_TIC_checkR_script <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-lipidomics-summed_TIC_checkR_script_v2.r")) %>% 
+summed_TIC_checkR_script <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-mrms-summed_TIC_checkR_script.r")) %>% 
   content(as = "text")
 eval(parse(text = summed_TIC_checkR_script), envir = .GlobalEnv)
 rm(summed_TIC_checkR_script)
