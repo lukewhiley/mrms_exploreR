@@ -116,7 +116,7 @@ y_axis_settings <- list(
   showgrid = TRUE,
   range = c(y_limit_lower-log(median_summed_tic)*0.1, 
             y_limit_upper),
-  title = "Lipid total ion count (Log)"
+  title = "MRMS total ion count (Log)"
 )
 
 p <- plot_ly(
