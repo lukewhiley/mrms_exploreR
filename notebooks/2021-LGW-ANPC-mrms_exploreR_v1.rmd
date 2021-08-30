@@ -65,6 +65,27 @@ print(paste0("Succesfully imported ", project_name, ": ", nrow(mrms_exploreR_dat
 ```
 
 QC check 1:
+  -> Sums all features and plots output
+  -> helps visualise outlier samples/mis-injections
+  
+```{r, summed_TIC_checkR,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
+setwd(project_dir)
+
+summed_TIC_checkR_script <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-lipidomics-summed_TIC_checkR_script_v2.r")) %>% 
+  content(as = "text")
+eval(parse(text = summed_TIC_checkR_script), envir = .GlobalEnv)
+rm(summed_TIC_checkR_script)
+
+tic_check_p
+
+kable(tic_qc_fail,
+      caption = paste0(nrow(tic_qc_fail), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr),"  were LTRs.  These have been removed from the dataset."))
+
+```
+
+
+
+QC check 1:
   -> This QC check performs 2 basic feature QC checks
   -> 1: number of zero values in each feature
   -> 2: % RSD of each feature in the QC of choice
@@ -82,27 +103,7 @@ rm(lipid_exploreR_script)
   
 
 
-QC check 2:
-  -> Selects and sums all of the lipid targets that are not SIL internal standards 
-  -> creates interactive plot of the result
-  -> If sample has had correct volume added to plate wells they should be within x% from the median. 
-  -> Default is 50% cut-off 
-  -> if in custom mode please edit as appropriate
-  -> used for obvious outliers
-  
-```{r, summed_TIC_checkR,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
-setwd(project_dir)
-summed_TIC_checkR_script <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-lipidomics-summed_TIC_checkR_script_v2.r")) %>% 
-  content(as = "text")
-eval(parse(text = summed_TIC_checkR_script), envir = .GlobalEnv)
-rm(summed_TIC_checkR_script)
 
-tic_check_p
-
-kable(tic_qc_fail,
-      caption = paste0(nrow(tic_qc_fail), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr),"  were LTRs.  These have been removed from the dataset."))
-
-```
 
 
 QC check 3:
