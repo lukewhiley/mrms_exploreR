@@ -1,0 +1,120 @@
+# ######### read in data etc
+
+dlg_message("Please select your project folder", type = 'ok'); project_dir <- rstudioapi::selectDirectory() # save project directory root location
+setwd(project_dir) # switch the project directory
+
+# set list to store data throughout lipid_exploreR
+mrms_exploreR_data <- list()
+
+# create a new directory to store html widgets
+if(!dir.exists(paste(project_dir, paste("/",Sys.Date(), "_html_files", sep=""), sep=""))){
+  dir.create(paste(project_dir, paste("/",Sys.Date(), "_html_files", sep=""), sep=""))
+} 
+project_dir_html <- paste(project_dir, paste("/",Sys.Date(), "_html_files", sep=""), sep="")
+
+#user input here for project name and user initials
+temp_answer <- "blank"
+if(exists("project_name") == TRUE){temp_answer <- dlgInput(paste("the project name is ", project_name, "is this correct?", sep=" "), "yes/no")$res}
+while(temp_answer != "yes"){
+project_name <- dlgInput("what is the name of the project?", "example_project")$res
+mrms_exploreR_data[["project_name"]] <- project_name
+temp_answer <- dlgInput(paste("the project name is ", project_name, "is this correct?", sep=" "), "yes/no")$res
+}
+
+temp_answer <- "blank"
+if(exists("user_name") == TRUE){temp_answer <- dlgInput(paste("the user is ", user_name, "is this correct?", sep=" "), "yes/no")$res}
+while(temp_answer != "yes"){
+  user_name <- dlgInput("Insert your initials", "example_initials")$res
+  mrms_exploreR_data[["user"]] <- user_name
+  temp_answer <- dlgInput(paste("the user is ", user_name, "is this correct?", sep=" "), "yes/no")$res
+}
+
+temp_answer <- "blank"
+if(exists("qc_type") == TRUE){temp_answer <- dlgInput(paste(qc_type, " were used as a QC - is this correct?", sep=" "), "yes/no")$res}
+while(temp_answer != "yes"){
+  qc_type <- dlgInput("What type of quality control did you use?", "LTR/PQC/none")$res
+  mrms_exploreR_data[["qc_type"]] <- qc_type
+  temp_answer <- dlgInput(paste(qc_type, " were used as a QC - is this correct?", sep=" "), "yes/no")$res
+}
+
+
+# read in master data
+temp_answer <- "blank"
+while(temp_answer != "yes" & temp_answer != "no"){
+temp_answer <- dlgInput("Do you want to read in new data?", "yes/no")$res
+}
+if(temp_answer == "yes"){dlg_message("open mrms data", type = 'ok')
+  mrms_exploreR_data[["master_data"]] <- read_csv(file = file.choose(.)) %>% clean_names
+}
+
+mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["master_data"]] %>%
+  filter(!is.na(type)) %>%
+  rename(sampleID = bucket_label) 
+  
+
+sampleID <- mrms_exploreR_data[["data_unprocessed"]]$sampleID %>% unique() # create list of sample IDs
+feature <- mrms_exploreR_data[["data_unprocessed"]] %>% select(contains("x")) %>% names() # create list of mrms features
+
+
+project_run_order <- mrms_exploreR_data[["data_unprocessed"]] %>% select(sampleID)
+project_run_order$plateID <- rep("NA", nrow(project_run_order))
+project_run_order$injection_order <- 1:nrow(project_run_order)
+project_run_order_html <- htmlTable(project_run_order)
+
+htmltools::save_html(project_run_order_html, file = paste(project_dir_html, "/", project_name, "_", user_name, "_run_order_check.html", sep=""))# save plotly widget
+browseURL(paste(project_dir_html, "/", project_name, "_", user_name, "_run_order_check.html", sep="")) #open plotly widget in internet browser
+
+temp_answer <- "blank"
+temp_answer_2 <- "blank"
+while(temp_answer_2 != "yes"){
+while(temp_answer != "yes" & temp_answer != "no"){
+  temp_answer <- dlgInput("A worklist has just opened in your browser.  Does this match the run order of your analysis?", "yes/no")$res
+}
+
+if(temp_answer == "no"){
+  dlg_message("OK. Please upload a worklist template csv file now. It will need 3x columns: sampleID, PlateID and injection_order. A template file has been created in your project directory (run_order_template.csv)", type = 'ok')
+  temp_tibble <- project_run_order
+  temp_tibble$injection_order <- NA
+  temp_tibble$plateID <- "plate_x"
+  write_csv(temp_tibble, 
+            file = paste(project_dir, "/", Sys.Date(), "_run_order_template.csv", sep=""))
+  dlg_message("Select this file now", type = 'ok')
+  new_project_run_order <- file.choose(.) %>% read_csv()
+  colnames(new_project_run_order) <- c("sampleID", "plateID", "injection_order")
+}
+
+mrms_exploreR_data[["data_unprocessed"]]$run_order <- NA
+for(idx_ro in 1:nrow(new_project_run_order)){
+  #browser()
+  #add run order value from worklist template to mrms_exploreR_data[["data_unprocessed"]] 
+  mrms_exploreR_data[["data_unprocessed"]]$run_order[grep(new_project_run_order$sampleID[idx_ro], mrms_exploreR_data[["data_unprocessed"]]$sampleID)] <- new_project_run_order$injection_order[idx_ro]
+  #add plate number order value from worklist template to mrms_exploreR_data[["data_unprocessed"]] 
+  mrms_exploreR_data[["data_unprocessed"]]$plateID[grep(new_project_run_order$sampleID[idx_ro], mrms_exploreR_data[["data_unprocessed"]]$sampleID)] <- new_project_run_order$plateID[idx_ro]
+}
+
+mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% arrange(run_order)
+
+new_project_run_order <- mrms_exploreR_data[["data_unprocessed"]] %>% select(sampleID, plateID, run_order)
+colnames(new_project_run_order) <- c("sampleID", "plateID", "injection_order")
+new_project_run_order <- new_project_run_order %>% filter(!is.na(injection_order))
+new_project_run_order_html <- htmlTable(new_project_run_order)
+
+htmltools::save_html(new_project_run_order_html, file = paste(project_dir_html, "/", project_name, "_", user_name, "_run_order_check.html", sep=""))# save plotly widget
+browseURL(paste(project_dir_html, "/", project_name, "_", user_name, "_run_order_check.html", sep="")) #open plotly widget in internet browser
+
+temp_answer_2 <- dlgInput("A new worklist order has just opened in your browser.  Does this match the run order of your analysis?", "yes/no")$res
+if(temp_answer_2 == "no"){
+  temp_answer <- "no"
+}
+}
+
+mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% add_column(mrms_exploreR_data[["data_unprocessed"]]$run_order, .before = 3, .name_repair = "minimal") %>% select(-run_order)
+colnames(mrms_exploreR_data[["data_unprocessed"]])[3] <- "run_order"
+
+
+mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("conditioning", sampleID))
+
+new_project_run_order <- new_project_run_order %>% filter(!grepl("conditioning", sampleID))
+plateID <- mrms_exploreR_data[["data_unprocessed"]]$plateID
+run_order <- mrms_exploreR_data[["data_unprocessed"]]$run_order
+
