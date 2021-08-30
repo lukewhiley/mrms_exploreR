@@ -23,7 +23,7 @@ while(intensity_threshold_ltr != "samples" & intensity_threshold_ltr != "LTR" & 
   intensity_threshold_ltr <- dlgInput(paste0("Do you want to apply the filtering using samples/LTR/PQC/all. Recommended default is all"), paste0("samples/LTR/PQC/all"))$res
 }
 
-#set up empty list
+#set up empty listå
 failed_metabolites_zero <- NULL
 
 percentage_of_zero_plot_data <- NULL
@@ -51,7 +51,7 @@ for(idx_feature in feature){
 failed_metabolites <- failed_metabolites_zero
 metabolite_list_filtered <- feature[-which(feature %in% failed_metabolites)]
 
-dlg_message(paste0(length(metabolite_list_filtered), " passed the % of zero values QC check.  ", length(failed_metabolites_zero), " failed the QC check."))
+paste0(length(metabolite_list_filtered), " passed the % of zero values QC check.  ", length(failed_metabolites_zero), " failed the QC check.")
 
 
 #step 2 - %RSD in pool
@@ -103,6 +103,6 @@ failed_metabolites_rsd <- failed_metabolites[-which(failed_metabolites %in% fail
 
 metabolite_list_filtered <- feature[-which(feature %in% failed_metabolites)]
 
-dlg_message(paste0(length(metabolite_list_filtered), " passed the % of zero values QC check.  ", length(failed_metabolites_rsd), " failed the % RSD QC check."))
+paste0(length(metabolite_list_filtered), " passed the % RSD values QC check.  ", length(failed_metabolites_rsd), " failed the % RSD QC check.")
 
 
