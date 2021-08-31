@@ -209,8 +209,11 @@ metabolite_list_filtered_2 <- mrms_exploreR_data$feature[-which(mrms_exploreR_da
 
 #paste0(length(metabolite_list_filtered), " feature had an % RSD of < 30% in replicate QC samples.  ", length(failed_metabolites_rsd), " failed the 30 % RSD QC check.")
 
-remove_qc <- "blank"
 
+dlg_message(paste0("QC check 1: ", nrow(percentage_of_zero_plot_data_pass), " features had an % RSD of < 30% in replicate QC samples.  ", nrow(percentage_of_zero_plot_data_fail), " features had an RSD > 30% in the PQC."))
+dlg_message(paste0("QC check 2: ", nrow(rsd_plot_data_pass), " features had an % RSD of < 30% in replicate QC samples.  ", nrow(rsd_plot_data_fail), " features had an RSD > 30% in the PQC."))
+
+remove_qc <- "blank"
 while(remove_qc != "remove" & remove_qc != "keep") {
   remove_qc <- dlgInput("Do you want to remove the failed features?", "remove/keep")$res
 }

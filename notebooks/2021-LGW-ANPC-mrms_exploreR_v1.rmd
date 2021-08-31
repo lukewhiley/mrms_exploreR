@@ -118,8 +118,9 @@ if(remove_qc == "remove"){mrms_exploreR_data$data_tic_filtered_qc_filtered <- mr
 QC_p_1_nc <- QC_p_1; QC_p_1_nc
 QC_p_2_nc <- QC_p_2; QC_p_2_nc
 
-paste0("QC check 1: ", length(metabolite_list_filtered), " features had < 50 % zero values QC check.  ", length(failed_metabolites_zero), " features had > 50% zero values.")
-paste0("QC check 2: ", length(metabolite_list_filtered_2), " features had an % RSD of < 30% in replicate QC samples.  ", length(failed_metabolites_rsd), " features had an RSD > 30% in the PQC.")
+paste0("QC check 1: ", nrow(percentage_of_zero_plot_data_pass), " features had an % RSD of < 30% in replicate QC samples.  ", nrow(percentage_of_zero_plot_data_fail), " features had an RSD > 30% in the PQC.")
+paste0("QC check 2: ", nrow(rsd_plot_data_pass), " features had an % RSD of < 30% in replicate QC samples.  ", nrow(rsd_plot_data_fail), " features had an RSD > 30% in the PQC.")
+
 
 
 
@@ -226,9 +227,8 @@ if(remove_qc == "remove"){mrms_exploreR_data$corrected_data_tic_filtered_qc_filt
 QC_p_1_c <- QC_p_1; QC_p_1_c
 QC_p_2_c <- QC_p_2; QC_p_2_c
 
-paste0("QC check 1: ", length(metabolite_list_filtered), " features had < 50 % zero values QC check.  ", length(failed_metabolites_zero), " features had > 50% zero values.")
-paste0("QC check 2: ", length(metabolite_list_filtered_2), " features had an % RSD of < 30% in replicate QC samples.  ", length(failed_metabolites_rsd), " features had an RSD > 30% in the PQC.")
-
+paste0("QC check 1: ", nrow(percentage_of_zero_plot_data_pass), " features had an % RSD of < 30% in replicate QC samples.  ", nrow(percentage_of_zero_plot_data_fail), " features had an RSD > 30% in the PQC.")
+paste0("QC check 2: ", nrow(rsd_plot_data_pass), " features had an % RSD of < 30% in replicate QC samples.  ", nrow(rsd_plot_data_fail), " features had an RSD > 30% in the PQC.")
 
 
 ```
