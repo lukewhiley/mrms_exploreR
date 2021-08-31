@@ -30,7 +30,7 @@ mrms_heatmap
 #'
 #' ### 3. Total ion count (TIC) quality control check
 #' 
-#' The first QC check summed the peak area of every MRMS feature target to produce a total ion count signal for each sample. The check is used to identify those samples that:  
+#' The first QC check summed the peak area of every MRMS feature to produce a total ion count signal for each sample. The check is used to identify those samples that:  
 #' 
 #' * contained low/no signal. Suggesting a preparation error where low volume of the sample had been added to the well or excessive extraction solvent had been added
 #' 
@@ -38,7 +38,7 @@ mrms_heatmap
 #' 
 #' #### Total ion count QC plot
 #' 
-#' This plot is the result of summing all the lipid target peak areas to form a single total ion count signal. All samples are plotted including LTR samples.
+#' This plot is the result of summing all the MRMS feature peak areas to form a single total ion count signal. All samples are plotted including LTR samples.
 #' 
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 tic_check_p_nc 
@@ -94,11 +94,11 @@ QC_p_1_nc
 #' 
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 
-print(paste(nrow(rsd_plot_data_nc)-length(which(rsd_plot_data_nc$rsd_loop_rsd < 30)), " lipid targets had a LTR RSD of > 30%", sep=""))
-print(paste("Total number of lipid target response ratios with with an LTR RSD of <30% =", length(which(rsd_plot_data_nc$rsd_loop_rsd < 30))))
-print(paste("Total number of lipid target response ratios with with an LTR RSD of <20% =", length(which(rsd_plot_data_nc$rsd_loop_rsd < 20))))
-print(paste("Total number of lipid target response ratios with with an LTR RSD of <15% =", length(which(rsd_plot_data_nc$rsd_loop_rsd < 15))))
-print(paste("Total number of lipid target response ratios with with an LTR RSD of <10% =", length(which(rsd_plot_data_nc$rsd_loop_rsd < 10))))
+print(paste(nrow(rsd_plot_data_nc)-length(which(rsd_plot_data_nc$rsd_loop_rsd < 30)), " MRMS features had a LTR RSD of > 30%", sep=""))
+print(paste("Total number of MRMS feature with an LTR RSD of <30% =", length(which(rsd_plot_data_nc$rsd_loop_rsd < 30))))
+print(paste("Total number of MRMS feature with an LTR RSD of <20% =", length(which(rsd_plot_data_nc$rsd_loop_rsd < 20))))
+print(paste("Total number of MRMS feature with an LTR RSD of <15% =", length(which(rsd_plot_data_nc$rsd_loop_rsd < 15))))
+print(paste("Total number of MRMS feature with an LTR RSD of <10% =", length(which(rsd_plot_data_nc$rsd_loop_rsd < 10))))
 
 #'
 #'
@@ -142,11 +142,11 @@ if(signal_drift_method == "RF"){
 
 
 
-print(paste(nrow(rsd_plot_data)-length(which(rsd_plot_data$rsd_loop_rsd < 30)), " lipid targets had a LTR RSD of > 30%", sep=""))
-print(paste("Total number of lipid target response ratios with with an LTR RSD of <30% =", length(which(rsd_plot_data$rsd_loop_rsd < 30))))
-print(paste("Total number of lipid target response ratios with with an LTR RSD of <20% =", length(which(rsd_plot_data$rsd_loop_rsd < 20))))
-print(paste("Total number of lipid target response ratios with with an LTR RSD of <15% =", length(which(rsd_plot_data$rsd_loop_rsd < 15))))
-print(paste("Total number of lipid target response ratios with with an LTR RSD of <10% =", length(which(rsd_plot_data$rsd_loop_rsd < 10))))
+print(paste(nrow(rsd_plot_data)-length(which(rsd_plot_data$rsd_loop_rsd < 30)), " MRMS features had a LTR RSD of > 30%", sep=""))
+print(paste("Total number of MRMS features with an LTR RSD of <30% =", length(which(rsd_plot_data$rsd_loop_rsd < 30))))
+print(paste("Total number of MRMS feature with an LTR RSD of <20% =", length(which(rsd_plot_data$rsd_loop_rsd < 20))))
+print(paste("Total number of MRMS feature with an LTR RSD of <15% =", length(which(rsd_plot_data$rsd_loop_rsd < 15))))
+print(paste("Total number of MRMS feature with an LTR RSD of <10% =", length(which(rsd_plot_data$rsd_loop_rsd < 10))))
 
 
 
