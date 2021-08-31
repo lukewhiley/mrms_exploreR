@@ -116,7 +116,7 @@ corrected_data <- mrms_exploreR_data$data_tic_filtered_qc_filtered %>%
   select(sampleID, run_order, type, plateID) %>% right_join(corrected_data, by = "sampleID")
 
 
-corrected_feature <- corrected_data %>% select(contains("x")) %>% names()
+#corrected_feature <- corrected_data %>% select(contains("x")) %>% names()
 
 
 
