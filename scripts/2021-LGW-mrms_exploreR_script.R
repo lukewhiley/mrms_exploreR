@@ -126,3 +126,31 @@ total_zero_values <- which(total_zero_values == 0) %>% length()
 
 total_percentage_zero_values <- ((100/total_data_points) * total_zero_values) %>% round(2)
 
+mrms_heatmap_data <- mrms_exploreR_data$data_unprocessed %>% select(contains("x")) %>% as.matrix %>% log() %>% t()
+mrms_heatmap_data[is.infinite(mrms_heatmap)] <- 0
+
+
+#create a list of axis settings for plot_ly
+x_axis_settings <- list(
+  zeroline = FALSE,
+  showline = TRUE,
+  linecolor = toRGB("black"),
+  linewidth = 2,
+  showgrid = FALSE,
+  title = "Sample index"
+)
+
+y_axis_settings <- list(
+  zeroline = FALSE,
+  showline = TRUE,
+  linecolor = toRGB("black"),
+  linewidth = 2,
+  showgrid = TRUE,
+  title = "Feature index"
+)
+
+mrms_heatmap <- plot_ly(z = mrms_heatmap_data, type = "heatmap") %>%
+  layout(xaxis = x_axis_settings,
+         yaxis = y_axis_settings)
+
+

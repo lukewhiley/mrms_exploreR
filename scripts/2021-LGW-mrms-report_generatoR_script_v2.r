@@ -17,6 +17,9 @@ print(paste0("There are ", mrms_exploreR_data$data_unprocessed$plateID %>% uniqu
 print(paste0("There are a total of ", total_data_points, " data points"))
 print(paste0(tota_percentage_zero_values, " % of total data points are missing or are a 0 value"))
 #'
+#'### MRMS heatmap to visualise missing values
+#'
+mrms_heatmap
 #'
 #' ### 2. Total ion count (TIC) quality control check
 #' 

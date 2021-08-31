@@ -60,9 +60,17 @@ print(paste0("There are a total of ", total_data_points, " data points"))
 print(paste0(total_percentage_zero_values, " % of total data points are missing or are a 0 value"))
 
 
-
 ```
 
+MRMS feature heatmap
+  -> to observe missing value distribution
+  
+```{r, mrms heatmap,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE, fig.height=4, fig.width=3}
+
+mrms_heatmap
+
+
+```
 
 
 QC check 1:
