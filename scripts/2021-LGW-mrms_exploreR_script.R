@@ -90,8 +90,8 @@ for(idx_ro in 1:nrow(new_project_run_order)){
 
 mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% arrange(run_order)
 
-new_project_run_order <- mrms_exploreR_data[["data_unprocessed"]] %>% select(sampleID, plateID, run_order)
-colnames(new_project_run_order) <- c("sampleID", "plateID", "injection_order")
+new_project_run_order <- mrms_exploreR_data[["data_unprocessed"]] %>% select(sampleID, plateID, run_order, batch)
+colnames(new_project_run_order) <- c("sampleID", "plateID", "injection_order", "batch")
 new_project_run_order <- new_project_run_order %>% filter(!is.na(injection_order))
 new_project_run_order_html <- htmlTable(new_project_run_order)
 
