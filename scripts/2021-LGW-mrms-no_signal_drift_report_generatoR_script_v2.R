@@ -8,15 +8,15 @@
 #'
 #' Thank you for using MRMS ExploreR. Your MRMS quality control evaluation report will now be produced.
 #'
-#' ### 1. Import details
+#' ### 1. Project details
 #'
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
-#'
 print(paste0("Project: ", project_name))
 print(paste0("User: ", user_name))
 print(paste0("QC type used: ", qc_type))
 #'
 #'
+#' ### 2. Import summary
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 print(paste0("Succesfully imported ", project_name, ": ", nrow(mrms_exploreR_data$data_unprocessed), " samples; ", length(mrms_exploreR_data$feature), " MRMS features"))
 print(paste0("There are ", mrms_exploreR_data$data_unprocessed$batch %>% unique() %>% length(), " batches in the dataset"))
@@ -25,10 +25,10 @@ print(paste0("There are a total of ", total_data_points, " data points"))
 print(paste0(total_percentage_zero_values, " % of total data points are missing or are a 0 value"))
 #'
 #'### MRMS heatmap to visualise missing values
-#'
+#+ echo=FALSE, message=FALSE, fig.width=8, fig.height=5
 mrms_heatmap
 #'
-#' ### 2. Total ion count (TIC) quality control check
+#' ### 3. Total ion count (TIC) quality control check
 #' 
 #' The first QC check summed the peak area of every MRMS feature target to produce a total ion count signal for each sample. The check is used to identify those samples that:  
 #' 
@@ -45,18 +45,19 @@ tic_check_p_nc
 #'
 #'
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
+print(paste0("Samples were considered outliers if their TIC was outside ", temp_answer_tic_nc, " % of the median "))
 print(paste0(nrow(tic_qc_fail), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr)," of which were QCs.  These have been removed from the dataset."))
 print(paste0("The dataset now contains ", nrow(mrms_exploreR_data$data_tic_filtered), " samples"))
 #'
 #' The following samples were removed from the dataset at this check point
 #'  
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4 
-knitr::kable(tic_qc_fail)
+#knitr::kable(tic_qc_fail)
 #'
 #'
 #'
 #'
-#' ### 3. MRMS feature quality control check
+#' ### 4. MRMS feature quality control check
 #' The QC checks now switched to the MRMS features. m/z features were filtered out due to a user defined signal intensity and appearance frequency.
 #' For example the default threshold is to spot zero values and to only keep features with a signal intensity greater than 0 counts in over 50% of samples
 #'
@@ -88,7 +89,7 @@ QC_p_1_nc
 #'
 #'
 #'
-#' ### 4. % RSD evaluation in replicate analysis of a QC sample
+#' ### 5. % RSD evaluation in replicate analysis of a QC sample
 #' 
 #' 
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
@@ -108,18 +109,21 @@ QC_p_2_nc
 #'
 #'
 #'
-#' ### 5. PCA plot to visualize final dataset variance (LTR and samples)
+#' ### 6. PCA plot to visualize final dataset variance (LTR and samples)
 #' 
 #' 
 #' 
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 
-print(paste("For creating the QC PCA plots Pareto scaling was used"))
-print(paste("PCA plot created using ",  mrms_exploreR_data$data_tic_filtered_qc_filtered %>% select(contains("x")) %>% ncol(), "MRMS features in the final dataset" ))
+print(paste0("For creating the QC PCA plots Pareto scaling was used"))
+print(paste0("PCA plot created using ",  mrms_exploreR_data$data_tic_filtered_qc_filtered %>% select(contains("x")) %>% ncol(), "MRMS features in the final dataset" ))
+print(paste0("coloured by sample/QC"))
 QC_PCA_1_nc
 #'
 #'
-QC_PCA_2_nc
 #'
+#+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
+print(paste0("coloured by plate"))
+QC_PCA_2_nc
 #'
 #'

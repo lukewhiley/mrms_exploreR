@@ -52,7 +52,7 @@ print(paste0("The dataset now contains ", nrow(mrms_exploreR_data$data_tic_filte
 #' The following samples were removed from the dataset at this check point
 #'  
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4 
-knitr::kable(tic_qc_fail)
+#knitr::kable(tic_qc_fail)
 #'
 #'
 #'
@@ -114,12 +114,15 @@ QC_p_2_nc
 #' 
 #' 
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
-
-print(paste("For creating the QC PCA plots Pareto scaling was used"))
-print(paste("PCA plot created using ",  mrms_exploreR_data$data_tic_filtered_qc_filtered %>% select(contains("x")) %>% ncol(), "MRMS features in the final dataset" ))
+print(paste0("For creating the QC PCA plots Pareto scaling was used"))
+print(paste0("PCA plot created using ",  mrms_exploreR_data$data_tic_filtered_qc_filtered %>% select(contains("x")) %>% ncol(), "MRMS features in the final dataset" ))
+print(paste0("coloured by sample/QC"))
 QC_PCA_1_nc
 #'
 #'
+#'
+#+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
+print(paste0("coloured by plate"))
 QC_PCA_2_nc
 #'
 #'
@@ -161,14 +164,15 @@ QC_p_2_c
 #' 
 #' 
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
-
-print(paste("For creating the QC PCA plots Pareto scaling was used"))
-print(paste("PCA plot created using ",  mrms_exploreR_data$corrected_data_tic_filtered_qc_filtered %>% select(contains("x")) %>% ncol(), "MRMS features in the final dataset" ))
+print(paste0("For creating the QC PCA plots Pareto scaling was used"))
+print(paste0("PCA plot created using ",  mrms_exploreR_data$corrected_data_tic_filtered_qc_filtered %>% select(contains("x")) %>% ncol(), "MRMS features in the final dataset" ))
+print(paste0("coloured by sample/QC"))
 QC_PCA_1_c
-
 #'
 #'
 #'
+#+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
+print(paste0("coloured by plate"))
 QC_PCA_2_c
 
 
