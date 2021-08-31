@@ -39,13 +39,9 @@ while(temp_answer != "yes"){
 
 
 # read in master data
-temp_answer <- "blank"
-while(temp_answer != "yes" & temp_answer != "no"){
-temp_answer <- dlgInput("Do you want to read in new data?", "yes/no")$res
-}
-if(temp_answer == "yes"){dlg_message("open mrms data", type = 'ok')
-  mrms_exploreR_data[["master_data"]] <- read_csv(file = file.choose(.)) %>% clean_names
-}
+dlg_message("Read in data - Select the CSV file now")
+mrms_exploreR_data[["master_data"]] <- read_csv(file = file.choose(.)) %>% clean_names
+
 
 mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["master_data"]] %>%
   filter(!is.na(type)) %>%
@@ -80,7 +76,7 @@ if(temp_answer == "no"){
             file = paste(project_dir, "/", Sys.Date(), "_run_order_template.csv", sep=""))
   dlg_message("Select this file now", type = 'ok')
   new_project_run_order <- file.choose(.) %>% read_csv()
-  colnames(new_project_run_order) <- c("sampleID", "plateID", "injection_order")
+  colnames(new_project_run_order) <- c("sampleID", "plateID", "injection_order", "batch")
 }
 
 mrms_exploreR_data[["data_unprocessed"]]$run_order <- NA

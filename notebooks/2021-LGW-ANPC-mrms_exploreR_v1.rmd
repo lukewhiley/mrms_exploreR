@@ -8,8 +8,8 @@ output:
 This notebook is designed for use with the ANPC MRMS data. 
 Section 1: explore MRMS data and visualise data quality.
 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Section 1 - MRMS exploreR
 
 This notebook is designed to explore the MRMS dataset and perform signal drift correction and QC check it. The script generates a report and a final dataset that can be used for data modeling.
@@ -118,7 +118,7 @@ if(remove_qc == "remove"){mrms_exploreR_data$data_tic_filtered_qc_filtered <- mr
 QC_p_1_nc <- QC_p_1; QC_p_1_nc
 QC_p_2_nc <- QC_p_2; QC_p_2_nc
 
-paste0("QC check 1: ", nrow(percentage_of_zero_plot_data_pass), " features had an % RSD of < 30% in replicate QC samples.  ", nrow(percentage_of_zero_plot_data_fail), " features had an RSD > 30% in the PQC.")
+paste0("QC check 1: ", nrow(percentage_of_zero_plot_data_pass), " passed QC check and had < 50% zero values.  ", nrow(percentage_of_zero_plot_data_fail), " failed QC check and had > 50% zero values")
 paste0("QC check 2: ", nrow(rsd_plot_data_pass), " features had an % RSD of < 30% in replicate QC samples.  ", nrow(rsd_plot_data_fail), " features had an RSD > 30% in the PQC.")
 
 
@@ -239,13 +239,13 @@ SIGNAL CORRECTED Quick PCA
 ```{r, CORRECTED PCA 1,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
 
 lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$corrected_data_tic_filtered_qc_filtered,
-        FUNC_metabolite_list = feature,
+        FUNC_metabolite_list = mrms_exploreR_data$feature,
         FUNC_colour_by = "type",
         FUNC_plot_label = "sampleID",
         FUNC_scaling = "Pareto")
 
 lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$corrected_data_tic_filtered_qc_filtered,
-        FUNC_metabolite_list = feature,
+        FUNC_metabolite_list = mrms_exploreR_data$feature,
         FUNC_colour_by = "plateID",
         FUNC_plot_label = "sampleID",
         FUNC_scaling = "Pareto")
