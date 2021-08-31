@@ -81,7 +81,7 @@ x_axis_settings <- list(
   linewidth = 2,
   showgrid = FALSE,
   range = c(0, max(percentage_of_zero_plot_data$sample_idx)+10),
-  title = "Sample index"
+  title = "Feature index"
 )
 
 y_axis_settings <- list(
@@ -178,7 +178,7 @@ x_axis_settings <- list(
   linewidth = 2,
   showgrid = FALSE,
   range = c(0, max(rsd_plot_data$sample_idx)+10),
-  title = "Sample index"
+  title = "Feature index"
 )
 
 y_axis_settings <- list(
