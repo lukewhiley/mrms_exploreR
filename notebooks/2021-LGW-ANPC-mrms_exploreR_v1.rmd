@@ -213,7 +213,7 @@ tic_check_p_c <- tic_check_p; tic_check_p_c
 kable(tic_qc_fail,
       caption = paste0(nrow(tic_qc_fail), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr),"  were QCs."))
 
-temp_answer_tic_cc <- temp_answer_tic
+temp_answer_tic_c <- temp_answer_tic
 print(paste0("Samples were considered outliers if their TIC was outside ", temp_answer_tic_c, " % of the median "))
 print(paste0("The dataset now contains ", nrow(mrms_exploreR_data$data_tic_filtered), " samples"))
 
@@ -349,7 +349,7 @@ browseURL(paste0(project_dir_html, "/",project_name, "_", user_name, "_mrms_expl
 #           )
 # }
 
-dlg_message("Lipidomics pre-processing and QC complete. Thanks for using skylineR and lipid exploreR. TTFN.", type = 'ok')
+dlg_message("Lipidomics pre-processing and QC complete. Thanks for using MRMS exploreR. TTFN.", type = 'ok')
 dlg_message("PS. an official html report can be found in the project folder", type = 'ok')
 
 ```
