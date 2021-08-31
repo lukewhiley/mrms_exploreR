@@ -12,7 +12,7 @@ Section 1: explore MRMS data and visualise data quality.
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Section 1 - MRMS exploreR
 
-This notebook is designed to explore the MRMS dataset and QC check it. The script generates a report and a final dataset that can be used for data modeling.
+This notebook is designed to explore the MRMS dataset and perform signal drift correction and QC check it. The script generates a report and a final dataset that can be used for data modeling.
 
 1. prepare project: 
   -> load packages and functions

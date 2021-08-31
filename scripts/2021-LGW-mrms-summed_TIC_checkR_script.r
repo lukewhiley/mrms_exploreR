@@ -43,8 +43,8 @@ while(tic_check_status == "change"){
 
 tic_qc_fail <- total_summed_tic$sampleID[which(total_summed_tic$summed_TIC < tic_cut_off_lower)] %>% as_tibble %>% rename(sampleID = value)
 tic_qc_fail$fail_point <- "tic"
-tic_qc_fail_ltr <- tic_qc_fail %>% filter(grepl("LTR", sampleID))# create tibble of failed LTRs
-tic_qc_fail_samples <- tic_qc_fail %>% filter(!grepl("LTR", sampleID)) # create tibble of failed samples (not LTRS)
+tic_qc_fail_ltr <- tic_qc_fail %>% filter(grepl(paste0(qc_type), sampleID))# create tibble of failed LTRs
+tic_qc_fail_samples <- tic_qc_fail %>% filter(!grepl(paste0(qc_type), sampleID)) # create tibble of failed samples (not LTRS)
 
 
 #visualise for reports
@@ -53,8 +53,8 @@ total_summed_tic$outlier[total_summed_tic$sampleID %in% tic_qc_fail$sampleID] <-
 
 total_summed_tic_outlier <- total_summed_tic %>% filter(grepl("outlier", outlier))
 total_summed_tic_pass <- total_summed_tic %>% filter(grepl("pass_qc", outlier))
-total_summed_tic_pqc <- total_summed_tic %>% filter(grepl("PQC", sampleID))
-total_summed_tic_pqc$PQC <- "PQC" 
+total_summed_tic_qc <- total_summed_tic %>% filter(grepl(paste0(qc_type), sampleID))
+total_summed_tic_qc$PQC <- paste0(qc_type) 
 
 # create a plate list ID
 #plate_number <- unique(total_summed_tic$plateID) %>% substr(14,14) %>% unique()
@@ -129,7 +129,7 @@ p <- plot_ly(
   add_trace(type = "scatter", data = total_summed_tic_outlier, x = ~sample_idx, y = ~LOG_summed_TIC, text = ~sampleID, color = ~outlier, 
             marker = list(size = 8, color = '#FF0000')
   ) %>%
-  add_trace(type = "scatter", data = total_summed_tic_pqc, x = ~sample_idx, y = ~LOG_summed_TIC, text = ~sampleID, color = ~PQC,
+  add_trace(type = "scatter", data = total_summed_tic_qc, x = ~sample_idx, y = ~LOG_summed_TIC, text = ~sampleID, color = ~PQC,
             marker = list(size = 8, color = 'black')
   ) %>%
   layout(xaxis = x_axis_settings,
