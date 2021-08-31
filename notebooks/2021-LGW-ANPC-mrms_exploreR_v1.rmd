@@ -62,6 +62,9 @@ rm(mrms_exploreR_script)
 
 print(paste0("Succesfully imported ", project_name, ": ", nrow(mrms_exploreR_data$data_unprocessed), " samples; ", length(feature), " mrms features"))
 
+print(paste0(tota_percentage_zero_values, " % of total data points are missing or are a 0 value"))
+
+
 ```
 
 QC check 1:

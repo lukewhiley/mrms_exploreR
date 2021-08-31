@@ -50,11 +50,9 @@ if(temp_answer == "yes"){dlg_message("open mrms data", type = 'ok')
 mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["master_data"]] %>%
   filter(!is.na(type)) %>%
   rename(sampleID = bucket_label) 
-  
 
 sampleID <- mrms_exploreR_data[["data_unprocessed"]]$sampleID %>% unique() # create list of sample IDs
 feature <- mrms_exploreR_data[["data_unprocessed"]] %>% select(contains("x")) %>% names() # create list of mrms features
-
 
 project_run_order <- mrms_exploreR_data[["data_unprocessed"]] %>% select(sampleID)
 project_run_order$plateID <- rep("NA", nrow(project_run_order))
@@ -117,4 +115,15 @@ mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocesse
 new_project_run_order <- new_project_run_order %>% filter(!grepl("conditioning", sampleID))
 plateID <- mrms_exploreR_data[["data_unprocessed"]]$plateID
 run_order <- mrms_exploreR_data[["data_unprocessed"]]$run_order
+
+#convert all feature intensity values to numeric
+mrms_exploreR_data[["data_unprocessed"]][which(names(mrms_exploreR_data[["data_unprocessed"]]) %in% feature)] <- sapply(mrms_exploreR_data[["data_unprocessed"]][which(names(mrms_exploreR_data[["data_unprocessed"]]) %in% feature)], as.numeric) %>% as_tibble
+
+#calculate total zero values
+total_data_points <- length(feature) * length(sampleID)
+total_zero_values <- mrms_exploreR_data$data_unprocessed %>% 
+  select(all_of(feature)) 
+total_zero_values <- which(total_zero_values == 0) %>% length()
+
+tota_percentage_zero_values <- ((100/total_data_points) * total_zero_values) %>% round(2)
 

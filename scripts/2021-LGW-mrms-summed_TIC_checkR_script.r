@@ -53,6 +53,8 @@ total_summed_tic$outlier[total_summed_tic$sampleID %in% tic_qc_fail$sampleID] <-
 
 total_summed_tic_outlier <- total_summed_tic %>% filter(grepl("outlier", outlier))
 total_summed_tic_pass <- total_summed_tic %>% filter(grepl("pass_qc", outlier))
+total_summed_tic_pqc <- total_summed_tic %>% filter(grepl("PQC", sampleID))
+total_summed_tic_pqc$PQC <- "PQC" 
 
 # create a plate list ID
 #plate_number <- unique(total_summed_tic$plateID) %>% substr(14,14) %>% unique()
@@ -126,6 +128,9 @@ p <- plot_ly(
 ) %>% 
   add_trace(type = "scatter", data = total_summed_tic_outlier, x = ~sample_idx, y = ~LOG_summed_TIC, text = ~sampleID, color = ~outlier, 
             marker = list(size = 8, color = '#FF0000')
+  ) %>%
+  add_trace(type = "scatter", data = total_summed_tic_pqc, x = ~sample_idx, y = ~LOG_summed_TIC, text = ~sampleID, color = ~PQC,
+            marker = list(size = 8, color = 'black')
   ) %>%
   layout(xaxis = x_axis_settings,
          yaxis = y_axis_settings
