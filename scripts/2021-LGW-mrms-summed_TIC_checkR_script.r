@@ -35,6 +35,8 @@ while(tic_check_status == "change"){
     temp_answer <- dlgInput("What do you wish to set for the fail cut off filter.  x % from the median", "e.g. recommended default x = 50")$res
   }
   
+  temp_answer_tic <- temp_answer
+  
   median_summed_tic <- median(total_summed_tic$summed_TIC)
   
   median_summed_tic <- median(total_summed_tic$summed_TIC)
