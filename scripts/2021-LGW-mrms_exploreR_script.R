@@ -57,6 +57,7 @@ mrms_exploreR_data$feature <- mrms_exploreR_data[["data_unprocessed"]] %>% selec
 project_run_order <- mrms_exploreR_data[["data_unprocessed"]] %>% select(sampleID)
 project_run_order$plateID <- rep("NA", nrow(project_run_order))
 project_run_order$injection_order <- 1:nrow(project_run_order)
+project_run_order$batch <- rep(1:nrow(project_run_order))
 project_run_order_html <- htmlTable(project_run_order)
 
 htmltools::save_html(project_run_order_html, file = paste(project_dir_html, "/", project_name, "_", user_name, "_run_order_check.html", sep=""))# save plotly widget
@@ -74,6 +75,7 @@ if(temp_answer == "no"){
   temp_tibble <- project_run_order
   temp_tibble$injection_order <- NA
   temp_tibble$plateID <- "plate_x"
+  temp_tibble$batch <- 1
   write_csv(temp_tibble, 
             file = paste(project_dir, "/", Sys.Date(), "_run_order_template.csv", sep=""))
   dlg_message("Select this file now", type = 'ok')
