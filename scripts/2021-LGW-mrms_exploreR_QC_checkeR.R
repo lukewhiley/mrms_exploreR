@@ -1,23 +1,29 @@
 #set intensity threshold
 
-dlg_message(paste0("Check 1 - intensity values per % of samples filter (filter by flags)"))
+dlg_message(paste0("Check 1 - filter by flags: x% of samples must have an intensity value > y"))
 
 # user choice on intensity threshold to be applied
 intensity_threshold <- NA
 
 while(is.na(intensity_threshold)) {
-  intensity_threshold <- dlgInput("What signal threshold do you want to set for the intensity cut-off filter", "e.g. recommended default = 0")$res %>% as.numeric()
+  intensity_threshold <- dlgInput("What intensity threshold do you want to set for the y.  Recommended default to evaluate missing values = 0", 0)$res %>% as.numeric()
 }
 
 # user choice on % of samples that must pass intensity threshold
 intensity_threshold_percentage <- NA
 
 while(is.na(intensity_threshold_percentage)) {
-  intensity_threshold_percentage <- dlgInput("what % of samples do you want over this threshold?", "e.g. recommended default = 50%")$res %>% as.numeric()
+  intensity_threshold_percentage <- dlgInput("what x % of samples do you want over this threshold?  Recommended default = 50 %", 50)$res %>% as.numeric()
 }
 
 # user choice should filter intensity be set for samples/LTR/both
 intensity_threshold_ltr <- "blank"
+
+while(intensity_threshold_ltr != "keep" & intensity_threshold_ltr != "change") {
+  intensity_threshold_ltr <- dlgInput(paste0("You are currently using ", qc_type, " for your QC.  Do you want to keep or change QC type?"), paste0("keep/change"))$res
+}
+
+if(intensity_threshold_ltr == "keep"){intensity_threshold_ltr <- "PQC"}
 
 while(intensity_threshold_ltr != "samples" & intensity_threshold_ltr != "LTR" & intensity_threshold_ltr != "PQC" & intensity_threshold_ltr != "all") {
   intensity_threshold_ltr <- dlgInput(paste0("Do you want to apply the filtering using samples/LTR/PQC/all. Recommended default is all"), paste0("samples/LTR/PQC/all"))$res
@@ -56,15 +62,21 @@ paste0(length(metabolite_list_filtered), " passed the % of zero values QC check.
 
 #step 2 - %RSD in pool
 
-dlg_message(paste0("Check 2 - % RSD in replicate QCs (LTRs or PQC)"))
+dlg_message(paste0("Check 2 - Evaluation of feature variation in replicate QC samples: Cut off is 30 % RSD in replicate analysis of QCs (LTRs or PQC)"))
 
-intensity_threshold_ltr <- "blank"
+# intensity_threshold_ltr <- "blank"
+# 
+# while(intensity_threshold_ltr != "keep" & intensity_threshold_ltr != "change") {
+# intensity_threshold_ltr <- dlgInput(paste0("You are currently using ", qc_type, " for your QC. Do you want to keep or change QC type?" ), paste0("keep/change"))$res
+# }
+# 
+# if(intensity_threshold_ltr == "keep"){intensity_threshold_ltr <- "PQC"}
+# 
+# while(intensity_threshold_ltr != "PQC" & intensity_threshold_ltr != "LTR" & intensity_threshold_ltr != "none") {
+#   intensity_threshold_ltr <- dlgInput(paste0("Did you use an LTR/PQC/none."), paste0("LTR/PQC/none"))$res
+# }
 
-while(intensity_threshold_ltr != "PQC" & intensity_threshold_ltr != "LTR" & intensity_threshold_ltr != "none") {
-  intensity_threshold_ltr <- dlgInput(paste0("Did you use an LTR/PQC/none."), paste0("LTR/PQC/none"))$res
-}
-
-if(intensity_threshold_ltr == "none"){dlg_message(paste0("no QC selected. No RSD filter is possible. Move to next section."))}
+if(intensity_threshold_ltr != "PQC" & intensity_threshold_ltr != "LTR"){dlg_message(paste0("no QC selected. No RSD filter is possible. Move to next section."))}
 
 
 if(intensity_threshold_ltr != "none"){
