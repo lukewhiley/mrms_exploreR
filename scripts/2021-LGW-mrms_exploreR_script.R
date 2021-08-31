@@ -67,7 +67,7 @@ while(temp_answer != "yes" & temp_answer != "no"){
 }
 
 if(temp_answer == "no"){
-  dlg_message("OK. Please upload a worklist template csv file now. It will need 3x columns: sampleID, PlateID and injection_order. A template file has been created in your project directory (run_order_template.csv)", type = 'ok')
+  dlg_message("OK. Please upload a worklist template csv file now. It will need 4x columns: sampleID, PlateID, injection_order, batch. A template file has been created in your project directory (run_order_template.csv)", type = 'ok')
   temp_tibble <- project_run_order
   temp_tibble$injection_order <- NA
   temp_tibble$plateID <- "plate_x"
@@ -86,6 +86,7 @@ for(idx_ro in 1:nrow(new_project_run_order)){
   mrms_exploreR_data[["data_unprocessed"]]$run_order[grep(new_project_run_order$sampleID[idx_ro], mrms_exploreR_data[["data_unprocessed"]]$sampleID)] <- new_project_run_order$injection_order[idx_ro]
   #add plate number order value from worklist template to mrms_exploreR_data[["data_unprocessed"]] 
   mrms_exploreR_data[["data_unprocessed"]]$plateID[grep(new_project_run_order$sampleID[idx_ro], mrms_exploreR_data[["data_unprocessed"]]$sampleID)] <- new_project_run_order$plateID[idx_ro]
+  mrms_exploreR_data[["data_unprocessed"]]$batch[grep(new_project_run_order$sampleID[idx_ro], mrms_exploreR_data[["data_unprocessed"]]$sampleID)] <- new_project_run_order$batch[idx_ro]
 }
 
 mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% arrange(run_order)
