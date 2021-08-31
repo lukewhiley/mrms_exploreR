@@ -50,14 +50,59 @@ for(idx_feature in feature){
     failed_metabolites_zero <- c(failed_metabolites_zero, idx_feature)
   } 
   
-  percentage_of_zero_plot_data <- c(percentage_of_zero_plot_data, percentage_of_zero)
+  percentage_of_zero <- cbind(idx_feature, percentage_of_zero) %>% as_tibble()
+  
+  percentage_of_zero_plot_data <- bind_rows(percentage_of_zero_plot_data, percentage_of_zero)
 }
 
+
+percentage_of_zero_plot_data$percentage_of_zero <- percentage_of_zero_plot_data$percentage_of_zero %>% as.numeric() %>% round(2)
+percentage_of_zero_plot_data <- percentage_of_zero_plot_data %>% arrange(percentage_of_zero)
+percentage_of_zero_plot_data$sample_idx <- c(1:nrow(percentage_of_zero_plot_data)) 
+percentage_of_zero_plot_data$pass <- "pass"
+percentage_of_zero_plot_data$pass[which(percentage_of_zero_plot_data$percentage_of_zero > intensity_threshold_percentage)] <- "fail"
+percentage_of_zero_plot_data_pass <- percentage_of_zero_plot_data %>% filter(pass == "pass")
+percentage_of_zero_plot_data_fail <- percentage_of_zero_plot_data %>% filter(pass == "fail")
 
 failed_metabolites <- failed_metabolites_zero
 metabolite_list_filtered <- feature[-which(feature %in% failed_metabolites)]
 
-paste0(length(metabolite_list_filtered), " passed the % of zero values QC check.  ", length(failed_metabolites_zero), " failed the QC check.")
+# paste0(length(metabolite_list_filtered), " passed the % of zero values QC check.  ", length(failed_metabolites_zero), " failed the QC check.")
+
+# create visualisation of missing values
+
+#create a list of axis settings for plot_ly
+x_axis_settings <- list(
+  zeroline = FALSE,
+  showline = TRUE,
+  linecolor = toRGB("black"),
+  linewidth = 2,
+  showgrid = FALSE,
+  range = c(0, max(percentage_of_zero_plot_data$sample_idx)+10),
+  title = "Sample index"
+)
+
+y_axis_settings <- list(
+  zeroline = FALSE,
+  showline = TRUE,
+  linecolor = toRGB("black"),
+  linewidth = 2,
+  showgrid = TRUE,
+  range = c(0,110),
+  title = "Percentage of zero values"
+)
+
+QC_p_1 <- plot_ly(
+  type = "scatter", mode = "markers", data = percentage_of_zero_plot_data_pass, x = ~sample_idx, y = ~percentage_of_zero, text = ~idx_feature, color = ~pass, colors = c('#1E90FF', '#FF0000'), 
+  marker = list(size = 7, color = '#1E90FF', opacity = 0.5,
+                line = list(color = '#000000',width = 1))
+) %>% 
+  add_trace(type = "scatter", data = percentage_of_zero_plot_data_fail, x = ~sample_idx, y = ~percentage_of_zero, text = ~idx_feature, color = ~pass, 
+            marker = list(size = 8, color = '#FF0000')
+  ) %>%
+  layout(xaxis = x_axis_settings,
+         yaxis = y_axis_settings
+  ) 
 
 
 #step 2 - %RSD in pool
@@ -101,20 +146,65 @@ for(idx_feature in metabolite_list_filtered){
   
   rsd_loop_rsd <- (rsd_loop_sd*100)/rsd_loop_mean
   
-  rsd_plot_data <- c(rsd_plot_data, rsd_loop_rsd)
-  
-  if(rsd_loop_rsd > 30 | is.nan(rsd_loop_rsd)){
+    if(rsd_loop_rsd > 30 | is.nan(rsd_loop_rsd)){
     failed_metabolites <- c(failed_metabolites, idx_feature)
-  }
+    }
+  
+    rsd_loop_rsd <- cbind(idx_feature, rsd_loop_rsd) %>% as_tibble()
+    rsd_plot_data <- bind_rows(rsd_plot_data, rsd_loop_rsd)
   
 }
 
 }
+
+
+rsd_plot_data$rsd_loop_rsd <- rsd_plot_data$rsd_loop_rsd %>% as.numeric() %>% round(2)
+rsd_plot_data <- rsd_plot_data %>% arrange(rsd_loop_rsd)
+rsd_plot_data$sample_idx <- c(1:nrow(rsd_plot_data)) 
+rsd_plot_data$pass <- "pass"
+rsd_plot_data$pass[which(rsd_plot_data$rsd_loop_rsd > 30)] <- "fail"
+rsd_plot_data_pass <- rsd_plot_data %>% filter(pass == "pass")
+rsd_plot_data_fail <- rsd_plot_data %>% filter(pass == "fail")
+
+# create visualisation of missing values
+
+#create a list of axis settings for plot_ly
+x_axis_settings <- list(
+  zeroline = FALSE,
+  showline = TRUE,
+  linecolor = toRGB("black"),
+  linewidth = 2,
+  showgrid = FALSE,
+  range = c(0, max(rsd_plot_data$sample_idx)+10),
+  title = "Sample index"
+)
+
+y_axis_settings <- list(
+  zeroline = FALSE,
+  showline = TRUE,
+  linecolor = toRGB("black"),
+  linewidth = 2,
+  showgrid = TRUE,
+  range = c(0,max(rsd_plot_data$rsd_loop_rsd)+10),
+  title = paste0("% RSD in ", qc_type, " replicate samples")
+)
+
+QC_p_2 <- plot_ly(
+  type = "scatter", mode = "markers", data = rsd_plot_data_pass, x = ~sample_idx, y = ~rsd_loop_rsd, text = ~idx_feature, color = ~pass, colors = c('#1E90FF', '#FF0000'), 
+  marker = list(size = 7, color = '#1E90FF', opacity = 0.5,
+                line = list(color = '#000000',width = 1))
+) %>% 
+  add_trace(type = "scatter", data = rsd_plot_data_fail, x = ~sample_idx, y = ~rsd_loop_rsd, text = ~idx_feature, color = ~pass, 
+            marker = list(size = 8, color = '#FF0000')
+  ) %>%
+  layout(xaxis = x_axis_settings,
+         yaxis = y_axis_settings
+  ) 
 
 failed_metabolites_rsd <- failed_metabolites[-which(failed_metabolites %in% failed_metabolites_zero)]
 
 metabolite_list_filtered <- feature[-which(feature %in% failed_metabolites)]
 
-paste0(length(metabolite_list_filtered), " passed the % RSD values QC check.  ", length(failed_metabolites_rsd), " failed the % RSD QC check.")
+# paste0(length(metabolite_list_filtered), " feature had an % RSD of < 30% in replicate QC samples.  ", length(failed_metabolites_rsd), " failed the 30 % RSD QC check.")
 
 

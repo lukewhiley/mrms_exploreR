@@ -101,7 +101,12 @@ mrms_exploreR_qc_check_1 <- GET(url = paste0(parent_github_function_url, "/scrip
 eval(parse(text = lipid_exploreR_script), envir = .GlobalEnv)
 rm(lipid_exploreR_script)
 
+QC_p_1
+QC_p_2
 
+
+paste0(length(metabolite_list_filtered), " passed the % of zero values QC check.  ", length(failed_metabolites_zero), " failed the QC check.")
+paste0(length(metabolite_list_filtered), " feature had an % RSD of < 30% in replicate QC samples.  ", length(failed_metabolites_rsd), " failed the 30 % RSD QC check.")
 ```
   
 
