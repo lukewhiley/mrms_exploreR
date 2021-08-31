@@ -5,8 +5,9 @@
 #' 
 #' ---
 
+print(paste0("Project: ", proje))
+
 #' Thank you for using MRMS ExploreR. Your MRMS quality control evaluation report will now be produced.
-#'
 #'
 #' ### 1. Import details
 #'
