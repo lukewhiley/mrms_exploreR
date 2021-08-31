@@ -21,7 +21,7 @@ print(paste0("Succesfully imported ", project_name, ": ", nrow(mrms_exploreR_dat
 print(paste0("There are ", mrms_exploreR_data$data_unprocessed$batch %>% unique() %>% length(), " batches in the dataset"))
 print(paste0("There are ", mrms_exploreR_data$data_unprocessed$plateID %>% unique() %>% length(), " plates in the dataset"))
 print(paste0("There are a total of ", total_data_points, " data points"))
-print(paste0(tota_percentage_zero_values, " % of total data points are missing or are a 0 value"))
+print(paste0(total_percentage_zero_values, " % of total data points are missing or are a 0 value"))
 #'
 #'### MRMS heatmap to visualise missing values
 #'
@@ -116,8 +116,9 @@ QC_p_2_nc
 print(paste("For creating the QC PCA plots Pareto scaling was used"))
 print(paste("PCA plot created using ",  mrms_exploreR_data$data_tic_filtered_qc_filtered %>% select(contains("x")) %>% ncol(), "MRMS features in the final dataset" ))
 QC_PCA_1_nc
-
-
+#'
+#'
+QC_PCA_2_nc
 #'
 #'
 #' ### 6. Data correction for signal drift
@@ -147,6 +148,12 @@ print(paste("Total number of lipid target response ratios with with an LTR RSD o
 #'
 #'
 #'
+#' ### Corrected QC visualization
+#'
+#'
+QC_p_2_c
+#'
+#'
 #' ### 7. PCA plot to visualize final corrected dataset variance (replicate QC and samples)
 #' 
 #' 
@@ -156,6 +163,11 @@ print(paste("Total number of lipid target response ratios with with an LTR RSD o
 print(paste("For creating the QC PCA plots Pareto scaling was used"))
 print(paste("PCA plot created using ",  mrms_exploreR_data$corrected_data_tic_filtered_qc_filtered %>% select(contains("x")) %>% ncol(), "MRMS features in the final dataset" ))
 QC_PCA_1_c
+
+#'
+#'
+#'
+QC_PCA_2_c
 
 
 
