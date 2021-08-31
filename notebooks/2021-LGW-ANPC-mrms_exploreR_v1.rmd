@@ -133,17 +133,19 @@ Quick PCA
 
 ```{r, PCA 1,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
 
-lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$data_tic_filtered_qc_filtered,
+
+
+QC_PCA_1_nc <- lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$data_tic_filtered_qc_filtered,
         FUNC_metabolite_list = mrms_exploreR_data$feature,
         FUNC_colour_by = "type",
         FUNC_plot_label = "sampleID",
-        FUNC_scaling = "Pareto")
+        FUNC_scaling = "Pareto"); QC_PCA_1_nc
 
-lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$data_tic_filtered_qc_filtered,
+QC_PCA_2_nc <- lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$data_tic_filtered_qc_filtered,
         FUNC_metabolite_list = mrms_exploreR_data$feature,
         FUNC_colour_by = "plateID",
         FUNC_plot_label = "sampleID",
-        FUNC_scaling = "Pareto")
+        FUNC_scaling = "Pareto"); QC_PCA_2_nc
 
 ```
 
@@ -289,48 +291,48 @@ setwd(project_dir)
 # produce a final report
 
 if(signal_drift_choice == "yes"){
-fileConn<-file(paste0(project_dir_html, "/ANPC_lipidomics-report-generatoR.r"))
-writeLines(GET(url = paste0(parent_github_url, "/scripts/2021-LGW-lipidomics-report_generatoR_script_v2.r")) %>%
+fileConn<-file(paste0(project_dir_html, "/ANPC_mrms-report-generatoR.r"))
+writeLines(GET(url = paste0(parent_github_url, "/scripts/2021-LGW-mrms-report_generatoR_script_v2.r")) %>%
                  content(as = "text"), fileConn)
 close(fileConn)
 }
 
 if(signal_drift_choice == "no"){
-fileConn<-file(paste0(project_dir_html, "/ANPC_lipidomics-report-generatoR.r"))
-writeLines(GET(url = paste0(parent_github_url, "/scripts/2021-LGW-lipidomics-no_signal_drift_report_generatoR_script_v2.R")) %>%
+fileConn<-file(paste0(project_dir_html, "/ANPC_mrms-report-generatoR.r"))
+writeLines(GET(url = paste0(parent_github_url, "/scripts/2021-LGW-mrms-no_signal_drift_report_generatoR_script_v2.R")) %>%
                  content(as = "text"), fileConn)
 close(fileConn)
 }
 
-rmarkdown::render(input = paste0(project_dir_html, "/ANPC_lipidomics-report-generatoR.r"),
+rmarkdown::render(input = paste0(project_dir_html, "/ANPC_mrms-report-generatoR.r"),
                   output_format = "html_document",
                   output_dir = paste(project_dir_html),
-                  output_file = paste0(project_name, "_", user_name, "_lipid_exploreR_QC_report.html")
+                  output_file = paste0(project_name, "_", user_name, "_mrms_exploreR_QC_report.html")
                   )
 
-file.remove(paste(paste0(project_dir_html, "/ANPC_lipidomics-report-generatoR.r")))
+file.remove(paste(paste0(project_dir_html, "/ANPC_mrms-report-generatoR.r")))
 
-browseURL(paste0(project_dir_html, "/",project_name, "_", user_name, "_lipid_exploreR_QC_report.html")) #open plotly widget in internet browser
+browseURL(paste0(project_dir_html, "/",project_name, "_", user_name, "_mrms_exploreR_QC_report.html")) #open plotly widget in internet browser
 
-if(signal_drift_choice == "no"){
-write_csv(lipid_exploreR_data[["individual_lipid_data_sil_tic_intensity_filtered_ratio_rsd"]], 
-          paste0(project_dir, "/", Sys.Date(), "_", project_name, "_", user_name, "_lipidexploreRv2_individual_lipid_data.csv")
-          )
-
-write_csv(lipid_exploreR_data[["class_lipid_data_sil_tic_intensity_filtered_ratio_rsd"]], 
-          paste0(project_dir, "/", Sys.Date(), "_", project_name, "_", user_name, "_lipidexploreRv2_summed_lipid_class_data.csv")
-          )
-}
-
-if(signal_drift_choice == "yes"){
-write_csv(lipid_exploreR_data[["individual_lipid_data_sil_tic_intensity_filtered_ratio_signal_drift"]], 
-          paste0(project_dir, "/", Sys.Date(), "_", project_name, "_", user_name, "_lipidexploreRv2_individual_lipid_data.csv")
-          )
-
-write_csv(lipid_exploreR_data[["class_lipid_data_sil_tic_intensity_filtered_ratio_signal_drift"]], 
-          paste0(project_dir, "/", Sys.Date(), "_", project_name, "_", user_name, "_lipidexploreRv2_summed_lipid_class_data.csv")
-          )
-}
+# if(signal_drift_choice == "no"){
+# write_csv(lipid_exploreR_data[["individual_lipid_data_sil_tic_intensity_filtered_ratio_rsd"]], 
+#           paste0(project_dir, "/", Sys.Date(), "_", project_name, "_", user_name, "_lipidexploreRv2_individual_lipid_data.csv")
+#           )
+# 
+# write_csv(lipid_exploreR_data[["class_lipid_data_sil_tic_intensity_filtered_ratio_rsd"]], 
+#           paste0(project_dir, "/", Sys.Date(), "_", project_name, "_", user_name, "_lipidexploreRv2_summed_lipid_class_data.csv")
+#           )
+# }
+# 
+# if(signal_drift_choice == "yes"){
+# write_csv(lipid_exploreR_data[["individual_lipid_data_sil_tic_intensity_filtered_ratio_signal_drift"]], 
+#           paste0(project_dir, "/", Sys.Date(), "_", project_name, "_", user_name, "_lipidexploreRv2_individual_lipid_data.csv")
+#           )
+# 
+# write_csv(lipid_exploreR_data[["class_lipid_data_sil_tic_intensity_filtered_ratio_signal_drift"]], 
+#           paste0(project_dir, "/", Sys.Date(), "_", project_name, "_", user_name, "_lipidexploreRv2_summed_lipid_class_data.csv")
+#           )
+# }
 
 dlg_message("Lipidomics pre-processing and QC complete. Thanks for using skylineR and lipid exploreR. TTFN.", type = 'ok')
 dlg_message("PS. an official html report can be found in the project folder", type = 'ok')
