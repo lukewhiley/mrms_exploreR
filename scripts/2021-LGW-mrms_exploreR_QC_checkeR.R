@@ -65,7 +65,9 @@ percentage_of_zero_plot_data_pass <- percentage_of_zero_plot_data %>% filter(pas
 percentage_of_zero_plot_data_fail <- percentage_of_zero_plot_data %>% filter(pass == "fail")
 
 failed_metabolites <- failed_metabolites_zero
-metabolite_list_filtered <- mrms_exploreR_data$feature[-which(mrms_exploreR_data$feature %in% failed_metabolites)]
+
+if(length(failed_metabolites) > 0){metabolite_list_filtered <- mrms_exploreR_data$feature[-which(mrms_exploreR_data$feature %in% failed_metabolites)]}
+if(length(failed_metabolites) == 0){metabolite_list_filtered <- mrms_exploreR_data$feature}
 
 # paste0(length(metabolite_list_filtered), " passed the % of zero values QC check.  ", length(failed_metabolites_zero), " failed the QC check.")
 
