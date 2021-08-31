@@ -29,7 +29,7 @@ failed_metabolites_zero <- NULL
 percentage_of_zero_plot_data <- NULL
 
 for(idx_feature in feature){
-  filter_data <- mrms_exploreR_data$data_unprocessed %>% 
+  filter_data <- mrms_exploreR_data$data_tic_filtered %>% 
     select(type, all_of(idx_feature)) 
   
   if(intensity_threshold_ltr == "LTR"){filter_data <- filter_data %>% filter(type == "LTR")}
@@ -69,8 +69,8 @@ if(intensity_threshold_ltr == "none"){dlg_message(paste0("no QC selected. No RSD
 
 if(intensity_threshold_ltr != "none"){
 
-QC_data <- mrms_exploreR_data$data_unprocessed %>%
-  filter(grepl(intensity_threshold_ltr, mrms_exploreR_data$data_unprocessed$type))
+QC_data <- mrms_exploreR_data$data_tic_filtered %>%
+  filter(grepl(intensity_threshold_ltr, mrms_exploreR_data$data_tic_filtered$type))
 
 rsd_plot_data <- NULL
 

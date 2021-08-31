@@ -55,13 +55,13 @@ rm(lipidomics_PCA_QC_function)
 ```{r, mrms_exploreR read in data,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
 
 # download and parse data preparation script
-mrms_exploreR_script <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-mrmsd_exploreR_script.R")) %>% 
+mrms_exploreR_script <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-mrms_exploreR_script.R")) %>% 
                                content(as = "text")
 eval(parse(text = mrms_exploreR_script), envir = .GlobalEnv)
 rm(mrms_exploreR_script)
 
-print(paste0("Succesfully imported ", project_name, ": ", nrow(mrms_exploreR_data$data_unprocessed), " samples; ", length(feature), " mrms features"))
-
+print(paste0("Succesfully imported ", project_name, ": ", nrow(mrms_exploreR_data$data_unprocessed), " samples; ", length(feature), " MRMS features"))
+print(paste0("There are a total of ", total_data_points, " data points"))
 print(paste0(tota_percentage_zero_values, " % of total data points are missing or are a 0 value"))
 
 
@@ -82,7 +82,7 @@ rm(summed_TIC_checkR_script)
 tic_check_p
 
 kable(tic_qc_fail,
-      caption = paste0(nrow(tic_qc_fail), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr),"  were LTRs.  These have been removed from the dataset."))
+      caption = paste0(nrow(tic_qc_fail), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr),"  were QCs.  These have been removed from the dataset."))
 
 ```
 
