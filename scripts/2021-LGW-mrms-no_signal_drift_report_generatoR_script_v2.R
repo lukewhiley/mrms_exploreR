@@ -18,6 +18,12 @@ print(paste0("There are a total of ", total_data_points, " data points"))
 print(paste0(tota_percentage_zero_values, " % of total data points are missing or are a 0 value"))
 #'
 #'
+#'#'### MRMS heatmap to visualise missing values
+#'
+mrms_heatmap
+#'
+#'
+#'
 #' ### 2. Total ion count (TIC) quality control check
 #' 
 #' The first QC check summed the peak area of every MRMS feature target to produce a total ion count signal for each sample. The check is used to identify those samples that:  
