@@ -124,5 +124,5 @@ total_zero_values <- mrms_exploreR_data$data_unprocessed %>%
   select(all_of(mrms_exploreR_data$feature)) 
 total_zero_values <- which(total_zero_values == 0) %>% length()
 
-tota_percentage_zero_values <- ((100/total_data_points) * total_zero_values) %>% round(2)
+total_percentage_zero_values <- ((100/total_data_points) * total_zero_values) %>% round(2)
 
