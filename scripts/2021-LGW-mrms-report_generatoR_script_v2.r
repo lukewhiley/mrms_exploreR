@@ -4,14 +4,19 @@
 #' output: html_document
 #' 
 #' ---
-
-print(paste0("Project: ", proje))
-
+#'
+#'
 #' Thank you for using MRMS ExploreR. Your MRMS quality control evaluation report will now be produced.
 #'
 #' ### 1. Import details
 #'
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
+#'
+print(paste0("Project: ", project_name))
+print(paste0("User: ", user_name))
+print(paste0("QC type used: ", qc_type))
+#'
+#'
 print(paste0("Succesfully imported ", project_name, ": ", nrow(mrms_exploreR_data$data_unprocessed), " samples; ", length(mrms_exploreR_data$feature), " MRMS features"))
 print(paste0("There are ", mrms_exploreR_data$data_unprocessed$batch %>% unique() %>% length(), " batches in the dataset"))
 print(paste0("There are ", mrms_exploreR_data$data_unprocessed$plateID %>% unique() %>% length(), " plates in the dataset"))

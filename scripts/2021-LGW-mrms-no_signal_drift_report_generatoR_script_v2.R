@@ -4,11 +4,18 @@
 #' output: html_document
 #' 
 #' ---
-
+#'
+#'
 #' Thank you for using MRMS ExploreR. Your MRMS quality control evaluation report will now be produced.
 #'
-#'
 #' ### 1. Import details
+#'
+#+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
+#'
+print(paste0("Project: ", project_name))
+print(paste0("User: ", user_name))
+print(paste0("QC type used: ", qc_type))
+#'
 #'
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 print(paste0("Succesfully imported ", project_name, ": ", nrow(mrms_exploreR_data$data_unprocessed), " samples; ", length(mrms_exploreR_data$feature), " MRMS features"))
