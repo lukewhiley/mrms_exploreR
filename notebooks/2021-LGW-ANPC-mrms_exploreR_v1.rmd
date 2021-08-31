@@ -53,7 +53,7 @@ mrms_exploreR_script <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-m
 eval(parse(text = mrms_exploreR_script), envir = .GlobalEnv)
 rm(mrms_exploreR_script)
 
-print(paste0("Succesfully imported ", project_name, ": ", nrow(mrms_exploreR_data$data_unprocessed), " samples; ", length(feature), " MRMS features"))
+print(paste0("Succesfully imported ", project_name, ": ", nrow(mrms_exploreR_data$data_unprocessed), " samples; ", length(mrms_exploreR_data$feature), " MRMS features"))
 print(paste0("There are a total of ", total_data_points, " data points"))
 print(paste0(tota_percentage_zero_values, " % of total data points are missing or are a 0 value"))
 
@@ -131,13 +131,13 @@ Quick PCA
 ```{r, PCA 1,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
 
 lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$data_tic_filtered_qc_filtered,
-        FUNC_metabolite_list = feature,
+        FUNC_metabolite_list = mrms_exploreR_data$feature,
         FUNC_colour_by = "type",
         FUNC_plot_label = "sampleID",
         FUNC_scaling = "Pareto")
 
 lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$data_tic_filtered_qc_filtered,
-        FUNC_metabolite_list = feature,
+        FUNC_metabolite_list = mrms_exploreR_data$feature,
         FUNC_colour_by = "plateID",
         FUNC_plot_label = "sampleID",
         FUNC_scaling = "Pareto")
@@ -155,21 +155,19 @@ setwd(project_dir)
 
 mrms_exploreR_data$data_for_signal_drift_correction <- mrms_exploreR_data$data_for_signal_QC_check
 
+signal_drift_choice <- "blank"
 while(signal_drift_choice != "yes"& signal_drift_choice != "no"){
   signal_drift_choice <- dlgInput("Do you want to use a signal drift correction?", "yes/no")$res
 }
 
 if(signal_drift_choice == "yes"){
   
-  signal_drift_continue <- "change"
-  
-  while(signal_drift_continue != "continue"){
-
-signal_drift_correct_script <- GET(url = paste0(parent_github_url, "/scripts/2021-mrms-signal_driftR_script.r")) %>% 
+signal_drift_correct_script <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-mrms-signal_driftR_script.r")) %>% 
                                      content(as = "text")
 eval(parse(text = signal_drift_correct_script), envir = .GlobalEnv)
 
 mrms_exploreR_data$data_tic_filtered_qc_filtered_signal_drift <- corrected_data
+  }
 
 ```
 
