@@ -34,7 +34,7 @@ failed_metabolites_zero <- NULL
 
 percentage_of_zero_plot_data <- NULL
 
-for(idx_feature in feature){
+for(idx_feature in mrms_exploreR_data$feature){
   filter_data <- mrms_exploreR_data$data_for_signal_QC_check %>% 
     select(type, all_of(idx_feature)) 
   
@@ -65,7 +65,7 @@ percentage_of_zero_plot_data_pass <- percentage_of_zero_plot_data %>% filter(pas
 percentage_of_zero_plot_data_fail <- percentage_of_zero_plot_data %>% filter(pass == "fail")
 
 failed_metabolites <- failed_metabolites_zero
-metabolite_list_filtered <- feature[-which(feature %in% failed_metabolites)]
+metabolite_list_filtered <- mrms_exploreR_data$feature[-which(mrms_exploreR_data$feature %in% failed_metabolites)]
 
 # paste0(length(metabolite_list_filtered), " passed the % of zero values QC check.  ", length(failed_metabolites_zero), " failed the QC check.")
 
@@ -203,7 +203,7 @@ QC_p_2 <- plot_ly(
 
 failed_metabolites_rsd <- failed_metabolites[-which(failed_metabolites %in% failed_metabolites_zero)]
 
-metabolite_list_filtered_2 <- feature[-which(feature %in% failed_metabolites)]
+metabolite_list_filtered_2 <- mrms_exploreR_data$feature[-which(mrms_exploreR_data$feature %in% failed_metabolites)]
 
 #paste0(length(metabolite_list_filtered), " feature had an % RSD of < 30% in replicate QC samples.  ", length(failed_metabolites_rsd), " failed the 30 % RSD QC check.")
 

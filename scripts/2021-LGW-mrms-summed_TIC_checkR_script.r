@@ -11,7 +11,7 @@ total_summed_tic <- apply(mrms_exploreR_data$data_for_TIC_QC_check %>% select(sa
   #browser()
   temp_data <- mrms_exploreR_data$data_for_TIC_QC_check %>% 
     filter(sampleID == summedTIC) %>% 
-    select(all_of(feature)) %>% 
+    select(all_of(mrms_exploreR_data$feature)) %>% 
     sapply(as.numeric) %>% 
     as_tibble() %>%
     colSums(na.rm = TRUE)
