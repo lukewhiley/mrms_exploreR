@@ -36,23 +36,16 @@ parent_github_url <- "https://raw.githubusercontent.com/lukewhiley/mrms_exploreR
 
 # lipid_exploreR url - for downloading functions
 
-parent_github_function_url <- "https://raw.githubusercontent.com/lukewhiley/targeted_lipid_exploreR_v2/main"
+parent_github_function_url <- "https://raw.githubusercontent.com/lukewhiley/metabolomics_code/main"
 
 # load custom functions from github
 
 #PCA function
-lipidomics_PCA_QC_function <- GET(url = paste0(parent_github_function_url, "/functions/2021-LGW-lipidomics-PCA_QC_checkR_function_v2.r")) %>% 
+PCA_QC_function <- GET(url = paste0(parent_github_function_url, "/functions/2021-LGW-universal_PCA_function.R")) %>% 
                                     content(as = "text")
-eval(parse(text = lipidomics_PCA_QC_function), envir = .GlobalEnv)
-rm(lipidomics_PCA_QC_function)
+eval(parse(text = PCA_QC_function), envir = .GlobalEnv)
+rm(PCA_QC_function)
 
-```
-
-
-1. read in and prepare data: 
-
-
-```{r, mrms_exploreR read in data,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
 
 # download and parse data preparation script
 mrms_exploreR_script <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-mrms_exploreR_script.R")) %>% 
@@ -64,8 +57,9 @@ print(paste0("Succesfully imported ", project_name, ": ", nrow(mrms_exploreR_dat
 print(paste0("There are a total of ", total_data_points, " data points"))
 print(paste0(tota_percentage_zero_values, " % of total data points are missing or are a 0 value"))
 
-
 ```
+
+
 
 QC check 1:
   -> Sums all features and plots output
@@ -73,6 +67,115 @@ QC check 1:
   
 ```{r, summed_TIC_checkR,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
 setwd(project_dir)
+
+mrms_exploreR_data$data_for_TIC_QC_check <- mrms_exploreR_data$data_unprocessed
+
+summed_TIC_checkR_script <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-mrms-summed_TIC_checkR_script.r")) %>% 
+  content(as = "text")
+eval(parse(text = summed_TIC_checkR_script), envir = .GlobalEnv)
+rm(summed_TIC_checkR_script)
+
+if(temp_answer == "all"){mrms_exploreR_data$data_tic_filtered <- mrms_exploreR_data$data_for_TIC_QC_check %>% filter(!sampleID %in% tic_qc_fail$sampleID)}
+if(temp_answer == "samples"){mrms_exploreR_data$data_tic_filtered <- mrms_exploreR_data$data_for_TIC_QC_check %>% filter(!sampleID %in% tic_qc_fail_samples$sampleID)}
+if(temp_answer == paste0(qc_type)){mrms_exploreR_data$data_tic_filtered <- mrms_exploreR_data$data_for_TIC_QC_check %>% filter(!sampleID %in% tic_qc_fail_ltr$sampleID)}
+if(temp_answer == "none"){mrms_exploreR_data$data_tic_filtered <- mrms_exploreR_data$data_for_TIC_QC_check}
+
+tic_check_p
+
+kable(tic_qc_fail,
+      caption = paste0(nrow(tic_qc_fail), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr),"  were QCs.  These have been removed from the dataset."))
+
+```
+
+
+
+QC check 2:
+  -> This QC check performs 2 basic feature QC checks
+  -> 1: number of zero values in each feature
+  -> 2: % RSD of each feature in the QC of choice
+  
+```{r, mrms_exploreR signal QC check,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
+
+mrms_exploreR_data$data_for_signal_QC_check <- mrms_exploreR_data$data_tic_filtered
+
+# download and parse data preparation script
+mrms_exploreR_qc_check_1 <- GET(url = paste0(parent_github_function_url, "/scripts/2021-LGW-mrms_exploreR_script.R")) %>% 
+                               content(as = "text")
+eval(parse(text = lipid_exploreR_script), envir = .GlobalEnv)
+rm(lipid_exploreR_script)
+
+
+
+if(remove_qc == "keep"){mrms_exploreR_data$data_tic_filtered_qc_filtered <- mrms_exploreR_data$data_tic_filtered}
+if(remove_qc == "remove"){mrms_exploreR_data$data_tic_filtered_qc_filtered <- mrms_exploreR_data$data_tic_filtered %>% select(sampleID, type, run_order, plateID, all_of(metabolite_list_filtered_2))}
+
+
+QC_p_1
+QC_p_2
+
+paste0("QC check 1: ", length(metabolite_list_filtered), " had < 50 % zero values QC check.  ", length(failed_metabolites_zero), " had > 50% zero values.")
+paste0("QC check 2: ", length(metabolite_list_filtered_2), " feature had an % RSD of < 30% in replicate QC samples.  ", length(failed_metabolites_rsd), " had an RSD > 30% in the PQC.")
+
+
+
+```
+  
+
+Quick PCA
+
+```{r, PCA 1,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
+
+lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$data_tic_filtered_qc_filtered,
+        FUNC_metabolite_list = feature,
+        FUNC_colour_by = "type",
+        FUNC_plot_label = "sampleID",
+        FUNC_scaling = "Pareto")
+
+lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$data_tic_filtered_qc_filtered,
+        FUNC_metabolite_list = feature,
+        FUNC_colour_by = "plateID",
+        FUNC_plot_label = "sampleID",
+        FUNC_scaling = "Pareto")
+
+```
+
+
+Signal drift correction using the statTarget package:
+  -> Performs mass spectrometry signal intensity drift correction
+  -> user has the choice of Random Forrest (RF) or Loess correction
+  -> signal drift images are output into a folder in the project directory
+  
+```{r, signal drift checkR script,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
+setwd(project_dir)
+
+
+while(signal_drift_choice != "yes"& signal_drift_choice != "no"){
+  signal_drift_choice <- dlgInput("Do you want to use a signal drift correction?", "yes/no")$res
+}
+
+if(signal_drift_choice == "yes"){
+  
+  signal_drift_continue <- "change"
+  
+  while(signal_drift_continue != "continue"){
+
+signal_drift_correct_script <- GET(url = paste0(parent_github_url, "/scripts/2021-mrms-signal_driftR_script.r")) %>% 
+                                     content(as = "text")
+eval(parse(text = signal_drift_correct_script), envir = .GlobalEnv)
+
+
+```
+
+Re-perform the above plots on the signal corrected data
+
+SIGNAL CORRECTED - QC check 1:
+  -> Sums all features and plots output
+  -> helps visualise outlier samples/mis-injections
+  
+```{r, summed_TIC_checkR,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
+setwd(project_dir)
+
+mrms_exploreR_data$data_for_TIC_QC_check <- mrms_exploreR_data$data_tic_filtered_qc_filtered_signal_drift
 
 summed_TIC_checkR_script <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-mrms-summed_TIC_checkR_script.r")) %>% 
   content(as = "text")
@@ -88,12 +191,12 @@ kable(tic_qc_fail,
 
 
 
-QC check 1:
+SIGNAL CORRECTED QC check 2:
   -> This QC check performs 2 basic feature QC checks
   -> 1: number of zero values in each feature
   -> 2: % RSD of each feature in the QC of choice
   
-```{r, mrms_exploreR QC check 1,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
+```{r, mrms_exploreR corrected signal QC check,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
 
 # download and parse data preparation script
 mrms_exploreR_qc_check_1 <- GET(url = paste0(parent_github_function_url, "/scripts/2021-LGW-mrmsd_exploreR_script.R")) %>% 
@@ -104,189 +207,58 @@ rm(lipid_exploreR_script)
 QC_p_1
 QC_p_2
 
+paste0("QC check 1: ", length(metabolite_list_filtered), " had < 50 % zero values QC check.  ", length(failed_metabolites_zero), " had > 50% zero values.")
+paste0("QC check 2: ", length(metabolite_list_filtered_2), " feature had an % RSD of < 30% in replicate QC samples.  ", length(failed_metabolites_rsd), " had an RSD > 30% in the PQC.")
 
-paste0(length(metabolite_list_filtered), " passed the % of zero values QC check.  ", length(failed_metabolites_zero), " failed the QC check.")
-paste0(length(metabolite_list_filtered), " feature had an % RSD of < 30% in replicate QC samples.  ", length(failed_metabolites_rsd), " failed the 30 % RSD QC check.")
+
+
 ```
   
 
+SIGNAL CORRECTED quick PCA
 
+```{r, PCA 1,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
 
+lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$data_tic_filtered_qc_filtered,
+        FUNC_metabolite_list = feature,
+        FUNC_colour_by = "type",
+        FUNC_plot_label = "sampleID",
+        FUNC_scaling = "Pareto")
 
-
-QC check 3:
-  -> Intensity check for individual lipids
-  -> Checks all lipid targets for any samples that fall below signal intensity threshold
-  -> Default is 5000 counts, but can be adjusted as required
-  -> Script provides options to check in x% of samples/LTRs/PQCs
-  -> Recommended default is lipid must be >5000 counts in 50% of LTR/PQC samples
-  
-```{r, intensity checkR,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
-setwd(project_dir)
-intensity_threshold_checkR_script <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-lipidomics-intensity_threshold_checkR_script_v2.r")) %>% 
-                                           content(as = "text")
-eval(parse(text = intensity_threshold_checkR_script), envir = .GlobalEnv)
-rm(intensity_threshold_checkR_script)
-
-print(paste0("Intensity check complete for ", project_name,  ": ", length(lipid_intensity_filter_fail), " lipids failed the intensity check and were removed."))
-
-```
-
-SIL normalization:
-  -> Creates response ratio of target lipid with internal standard of choice
-  -> Requires template describing IS target relationships with following column headers
-  -> Evaluates target/internal standard ratios in QC samples (for ANPC uses LTR or PQC samples in plots)
-  -> Creates interactive visualizations of summed ratios (both total dataset and per lipid class)
-  
-```{r, SIL internal standard normalizeR,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
-setwd(project_dir)
-LTR_SIL_normaliseR_script <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-lipidomics-internal_standard_normaliseR_v2.r")) %>% 
-                                   content(as = "text")
-eval(parse(text = LTR_SIL_normaliseR_script), envir = .GlobalEnv)
-rm(LTR_SIL_normaliseR_script)
-
-kable(sil_list_warning,
-      caption = "internal standard warning")
-
-```
-
-Visualize internal standard normalization
-
-```{r, SIL internal standard visualizeR,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
-# Create target lipid to stable isotope ratio internal standard and evaluate them in the pooled QC. Here we use Long Term Reference pool
-LTR_SIL_visualizeR_script <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-lipidomics-internal_standard_visualizeR_v2.r")) %>%
-                                   content(as = "text")
-eval(parse(text = LTR_SIL_visualizeR_script), envir = .GlobalEnv)
-rm(LTR_SIL_checkR_script)
-
-#keep plots for report generation
-ltr_rsd_1 <- ltr_rsd 
-ltr_rsd_kable <- c(">30", "<30", "<20", "<15", "<10") %>% 
-  as_tibble() %>%
-  rename(rsd=value)
-total_lipids <- c(length(which(ltr_rsd$RSD > 30)), length(which(ltr_rsd$RSD < 30)), length(which(ltr_rsd$RSD < 20)), length(which(ltr_rsd$RSD < 15)), length(which(ltr_rsd$RSD < 10)))
-
-normalized_check_class_p_1 <- normalized_check_class_p
-normalized_check_class_p
-
-normalized_check_p_1 <- normalized_check_p
-normalized_check_p
-
-ltr_rsd_kable <- ltr_rsd_kable %>% 
-  add_column(total_lipids, .after = 2)
-kable(ltr_rsd_kable,
-      caption = paste0("% RSD in LTR summary: ", project_name))
-
-lipid_exploreR_data[["individual_lipid_data_sil_tic_intensity_filtered_ratio_rsd"]]  <- rsd_filtered_data
-lipid_exploreR_data[["class_lipid_data_sil_tic_intensity_filtered_ratio_rsd"]] <- rsd_filtered_class_data
-```
-
-Create PCA visualizations:
-  -> Creates interactive PCA visualizations of the data
-  
-```{r, PCA checkR script,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
-setwd(project_dir)
-PCA_QC_script <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-lipidomics-PCA_QC_checkR_script_v2.r")) %>% 
-                       content(as = "text")
-eval(parse(text = PCA_QC_script), envir = .GlobalEnv)
-pca_scale_used_1 <- scale_used
-pca_p_1 <- pca_p
-
-pca_p_1
+lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$data_tic_filtered_qc_filtered,
+        FUNC_metabolite_list = feature,
+        FUNC_colour_by = "plateID",
+        FUNC_plot_label = "sampleID",
+        FUNC_scaling = "Pareto")
 
 ```
 
 
-Signal drift correction using the statTarget package:
-  -> Performs mass spectrometry signal intensity drift correction
-  -> user has the choice of Random Forrest (RF) or Loess correction
-  -> signal drift images are output into a folder in the project directory
-  
-```{r, signal drift checkR script,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
-setwd(project_dir)
-
-signal_drift_choice <- "blank"
-if(workflow_choice == "default"){
-  signal_drift_choice <- "yes"
-}
-
-while(signal_drift_choice != "yes"& signal_drift_choice != "no"){
-  signal_drift_choice <- dlgInput("Do you want to use a signal drift correction?", "yes/no")$res
-}
-
-if(signal_drift_choice == "yes"){
-  
-  signal_drift_continue <- "change"
-  
-  while(signal_drift_continue != "continue"){
-
-signal_drift_correct_script <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-lipidomics-signal_driftR_script_v2.r")) %>% 
-                                     content(as = "text")
-eval(parse(text = signal_drift_correct_script), envir = .GlobalEnv)
-
-lipid_exploreR_data[["individual_lipid_data_sil_tic_intensity_filtered_ratio_signal_drift"]] <- signal_drift_corrected_data
-lipid_exploreR_data[["class_lipid_data_sil_tic_intensity_filtered_ratio_signal_drift"]] <- signal_drift_corrected_class_data
 
 
-#replot with corrected data
-
-replot_answer <- "blank"
-if(workflow_choice == "default"){
-  replot_answer <- "yes"
-}
-
-while(replot_answer != "yes" & replot_answer != "no"){
-  replot_answer <- dlgInput("Do you want to replot the visualizations with the corrected data?", "yes/no")$res
-}
-
-#replot summed class plots
-if(replot_answer == "yes"){
-  ratio_data <- lipid_exploreR_data[["individual_lipid_data_sil_tic_intensity_filtered_ratio_signal_drift"]]
-  eval(parse(text = LTR_SIL_visualizeR_script), envir = .GlobalEnv)
-  
-  ltr_rsd_2 <- ltr_rsd 
-  
-  ltr_rsd_kable_2 <- c(">30", "<30", "<20", "<15", "<10") %>% 
-  as_tibble() %>%
-  rename(rsd=value)
-total_lipids <- c(length(which(ltr_rsd_2$RSD > 30)), length(which(ltr_rsd_2$RSD < 30)), length(which(ltr_rsd_2$RSD < 20)), length(which(ltr_rsd_2$RSD < 15)), length(which(ltr_rsd_2$RSD < 10)))
-
-normalized_check_class_p_2 <- normalized_check_class_p
-normalized_check_class_p_2
-
-normalized_check_p_2 <- normalized_check_p
-normalized_check_p_2
-
-ltr_rsd_kable_2 <- ltr_rsd_kable_2 %>% 
-  add_column(total_lipids, .after = 2)
-  
-
-#replot PCAs
-  rsd_filtered_data <- lipid_exploreR_data[["individual_lipid_data_sil_tic_intensity_filtered_ratio_signal_drift"]]
-  rsd_filtered_class_data <- lipid_exploreR_data[["class_lipid_data_sil_tic_intensity_filtered_ratio_signal_drift"]]
-  eval(parse(text = PCA_QC_script), envir = .GlobalEnv)
-  pca_scale_used_2 <- scale_used
-  pca_p_2 <- pca_p
-}
-
-signal_drift_continue <- "continue"
- 
-if(workflow_choice != "default"){
-  signal_drift_continue <- dlgInput("Are you happy with the drift correction or do you want to change", "continue/change")$res
-}
-}
-}
 
 
-if(signal_drift_choice == "yes"){
-  pca_p_2
 
-kable(ltr_rsd_kable_2,
-      caption = "% RSD in LTR summary (post-drift correction)")
 
-}
 
-```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Produce the final HTML QC report
   -> script produces a final report that is interactive and can be used to evaluate the quality of the data

@@ -7,9 +7,9 @@
 # the script sums the total intensity from all endogenous targets (e.g. not internal standards)
 dlg_message("Summed TIC check. This next step will assess the summed TIC accross all of the samples. If samples have been incorrectly prepared the summed TIC intensity will be too low/high. Used to remove obvious outliers only.", type = 'ok')
 
-total_summed_tic <- apply(mrms_exploreR_data$data_unprocessed %>% select(sampleID), 1, function(summedTIC){
+total_summed_tic <- apply(mrms_exploreR_data$data_for_TIC_QC_check %>% select(sampleID), 1, function(summedTIC){
   #browser()
-  temp_data <- mrms_exploreR_data$data_unprocessed %>% 
+  temp_data <- mrms_exploreR_data$data_for_TIC_QC_check %>% 
     filter(sampleID == summedTIC) %>% 
     select(all_of(feature)) %>% 
     sapply(as.numeric) %>% 
@@ -18,8 +18,8 @@ total_summed_tic <- apply(mrms_exploreR_data$data_unprocessed %>% select(sampleI
 }) %>% 
   c() %>% 
   as_tibble() %>%  
-  add_column(mrms_exploreR_data$data_unprocessed$sampleID, .before = 1) %>% 
-  rename(summed_TIC = value, sampleID = `mrms_exploreR_data$data_unprocessed$sampleID`)
+  add_column(mrms_exploreR_data$data_for_TIC_QC_check$sampleID, .before = 1) %>% 
+  rename(summed_TIC = value, sampleID = `mrms_exploreR_data$data_for_TIC_QC_check$sampleID`)
 
 total_summed_tic <- new_project_run_order %>% left_join(total_summed_tic, by = "sampleID") %>% arrange(injection_order) %>% filter(!is.na(summed_TIC))
 total_summed_tic$sample_idx <- c(1:nrow(total_summed_tic))
@@ -158,8 +158,5 @@ while(temp_answer != "all" & temp_answer != "none" & temp_answer != "samples" & 
   temp_answer <- dlgInput(paste("of the ", nrow(tic_qc_fail), "FAILED samples.  ",  nrow(tic_qc_fail_ltr),"  were ", paste0(qc_type),  ".  Do you want to remove failed samples?"), paste0("all/none/samples/", qc_type))$res
 }
 
-if(temp_answer == "all"){mrms_exploreR_data$data_tic_filtered <- mrms_exploreR_data$data_unprocessed %>% filter(!sampleID %in% tic_qc_fail$sampleID)}
-if(temp_answer == "samples"){mrms_exploreR_data$data_tic_filtered <- mrms_exploreR_data$data_unprocessed %>% filter(!sampleID %in% tic_qc_fail_samples$sampleID)}
-if(temp_answer == paste0(qc_type)){mrms_exploreR_data$data_tic_filtered <- mrms_exploreR_data$data_unprocessed %>% filter(!sampleID %in% tic_qc_fail_ltr$sampleID)}
-if(temp_answer == "none"){mrms_exploreR_data$data_tic_filtered <- mrms_exploreR_data$data_unprocessed}
+
 

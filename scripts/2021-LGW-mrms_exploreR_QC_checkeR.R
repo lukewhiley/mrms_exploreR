@@ -35,7 +35,7 @@ failed_metabolites_zero <- NULL
 percentage_of_zero_plot_data <- NULL
 
 for(idx_feature in feature){
-  filter_data <- mrms_exploreR_data$data_tic_filtered %>% 
+  filter_data <- mrms_exploreR_data$data_for_signal_QC_check %>% 
     select(type, all_of(idx_feature)) 
   
   if(intensity_threshold_ltr == "LTR"){filter_data <- filter_data %>% filter(type == "LTR")}
@@ -126,8 +126,8 @@ if(intensity_threshold_ltr != "PQC" & intensity_threshold_ltr != "LTR"){dlg_mess
 
 if(intensity_threshold_ltr != "none"){
 
-QC_data <- mrms_exploreR_data$data_tic_filtered %>%
-  filter(grepl(intensity_threshold_ltr, mrms_exploreR_data$data_tic_filtered$type))
+QC_data <- mrms_exploreR_data$data_for_signal_QC_check %>%
+  filter(grepl(intensity_threshold_ltr, mrms_exploreR_data$data_for_signal_QC_check$type))
 
 rsd_plot_data <- NULL
 
@@ -203,8 +203,12 @@ QC_p_2 <- plot_ly(
 
 failed_metabolites_rsd <- failed_metabolites[-which(failed_metabolites %in% failed_metabolites_zero)]
 
-metabolite_list_filtered <- feature[-which(feature %in% failed_metabolites)]
+metabolite_list_filtered_2 <- feature[-which(feature %in% failed_metabolites)]
 
-# paste0(length(metabolite_list_filtered), " feature had an % RSD of < 30% in replicate QC samples.  ", length(failed_metabolites_rsd), " failed the 30 % RSD QC check.")
+#paste0(length(metabolite_list_filtered), " feature had an % RSD of < 30% in replicate QC samples.  ", length(failed_metabolites_rsd), " failed the 30 % RSD QC check.")
 
+remove_qc <- "blank"
 
+while(remove_qc != "remove" & remove_qc != "keep") {
+  remove_qc <- dlgInput("Do you want to remove the failed features?", "remove/keep")$res
+}
