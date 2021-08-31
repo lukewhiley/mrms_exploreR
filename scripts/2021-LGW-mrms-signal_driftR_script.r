@@ -7,7 +7,7 @@ dir.create(paste(project_dir, "/", Sys.Date(), "_signal_correction_results", sep
 setwd(paste(project_dir, "/", Sys.Date(), "_signal_correction_results", sep=""))
 
 #fill infinite values created at the ratio step with a small value
-sil_trend <- mrms_exploreR_data$data_tic_filtered
+sil_trend <- mrms_exploreR_data$data_for_signal_drift_correction
 sil_trend[sapply(sil_trend, is.infinite)] <- 1e-5
 
 

@@ -85,6 +85,10 @@ tic_check_p_nc <- tic_check_p; tic_check_p_nc
 kable(tic_qc_fail,
       caption = paste0(nrow(tic_qc_fail), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr),"  were QCs.  These have been removed from the dataset."))
 
+
+print(paste0(nrow(tic_qc_fail), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr)," of which were QCs.  These have been removed from the dataset."))
+print(paste0("The dataset now contains ", nrow(mrms_exploreR_data$data_tic_filtered), " samples"))
+
 ```
 
 
@@ -99,10 +103,10 @@ QC check 2:
 mrms_exploreR_data$data_for_signal_QC_check <- mrms_exploreR_data$data_tic_filtered
 
 # download and parse data preparation script
-mrms_exploreR_qc_check_1 <- GET(url = paste0(parent_github_function_url, "/scripts/2021-LGW-mrms_exploreR_script.R")) %>% 
+mrms_exploreR_qc_check_1 <- GET(url = paste0(parent_github_url, "/scripts/2021-LGW-mrms_exploreR_QC_checkeR.R")) %>% 
                                content(as = "text")
-eval(parse(text = lipid_exploreR_script), envir = .GlobalEnv)
-rm(lipid_exploreR_script)
+eval(parse(text = mrms_exploreR_qc_check_1), envir = .GlobalEnv)
+rm(mrms_exploreR_qc_check_1)
 
 
 
@@ -149,6 +153,7 @@ Signal drift correction using the statTarget package:
 ```{r, signal drift checkR script,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
 setwd(project_dir)
 
+mrms_exploreR_data$data_for_signal_drift_correction <- mrms_exploreR_data$data_for_signal_QC_check
 
 while(signal_drift_choice != "yes"& signal_drift_choice != "no"){
   signal_drift_choice <- dlgInput("Do you want to use a signal drift correction?", "yes/no")$res
