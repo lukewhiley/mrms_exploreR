@@ -87,7 +87,7 @@ print(paste("Total number of lipid target response ratios with with an LTR RSD o
 #'
 #'
 #'
-#' ### 6. PCA plot to visualize final dataset variance (LTR and samples)
+#' ### 5. PCA plot to visualize final dataset variance (LTR and samples)
 #' 
 #' 
 #' 
@@ -100,7 +100,7 @@ QC_PCA_1_nc
 
 #'
 #'
-#' ### 7. Data correction for signal drift
+#' ### 6. Data correction for signal drift
 #' 
 #' Using the selected replicate QC (PQC or LTR) samples the signals was corrected for signal drift across the run
 #'  
@@ -127,7 +127,7 @@ print(paste("Total number of lipid target response ratios with with an LTR RSD o
 #'
 #'
 #'
-#' ### 8. PCA plot to visualize final corrected dataset variance (replicate QC and samples)
+#' ### 7. PCA plot to visualize final corrected dataset variance (replicate QC and samples)
 #' 
 #' 
 #' 

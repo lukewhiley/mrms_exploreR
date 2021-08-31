@@ -116,6 +116,8 @@ if(remove_qc == "keep"){mrms_exploreR_data$data_tic_filtered_qc_filtered <- mrms
 if(remove_qc == "remove"){mrms_exploreR_data$data_tic_filtered_qc_filtered <- mrms_exploreR_data$data_for_signal_QC_check %>% 
   select(sampleID, type, run_order, plateID, all_of(metabolite_list_filtered_2))}
 
+percentage_of_zero_plot_data_nc <- percentage_of_zero_plot_data
+rsd_plot_data_nc <- rsd_plot_data
 
 QC_p_1_nc <- QC_p_1; QC_p_1_nc
 QC_p_2_nc <- QC_p_2; QC_p_2_nc
@@ -242,17 +244,17 @@ SIGNAL CORRECTED Quick PCA
 
 ```{r, CORRECTED PCA 1,  eval = FALSE, echo = FALSE, results = FALSE, warning=FALSE, message=FALSE}
 
-lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$corrected_data_tic_filtered_qc_filtered,
+QC_PCA_1_c <- lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$corrected_data_tic_filtered_qc_filtered,
         FUNC_metabolite_list = mrms_exploreR_data$feature,
         FUNC_colour_by = "type",
         FUNC_plot_label = "sampleID",
-        FUNC_scaling = "Pareto")
+        FUNC_scaling = "Pareto"); QC_PCA_1_c
 
-lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$corrected_data_tic_filtered_qc_filtered,
+QC_PCA_2_c <- lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$corrected_data_tic_filtered_qc_filtered,
         FUNC_metabolite_list = mrms_exploreR_data$feature,
         FUNC_colour_by = "plateID",
         FUNC_plot_label = "sampleID",
-        FUNC_scaling = "Pareto")
+        FUNC_scaling = "Pareto"); QC_PCA_2_c
 
 ```
 
