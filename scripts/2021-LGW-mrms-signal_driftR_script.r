@@ -3,7 +3,9 @@
 
 library(statTarget)
 
-dir.create(paste(project_dir, "/", Sys.Date(), "_signal_correction_results", sep=""))
+if(!dir.exists(paste(project_dir, "/", Sys.Date(), "_signal_correction_results", sep=""))){
+  dir.create(paste(project_dir, "/", Sys.Date(), "_signal_correction_results", sep=""))
+}
 setwd(paste(project_dir, "/", Sys.Date(), "_signal_correction_results", sep=""))
 
 #fill infinite values created at the ratio step with a small value
@@ -13,8 +15,8 @@ sil_trend[sapply(sil_trend, is.infinite)] <- 1e-5
 
 #this section creates the required metadata file for statTarget::shiftCor
 
-sil_trend_cor_meta <- sil_trend %>% select(sampleID) 
-sil_trend_cor_meta$batch <- 1
+sil_trend_cor_meta <- sil_trend %>% select(sampleID, batch) 
+#sil_trend_cor_meta$batch <- 1
 sil_trend_cor_meta$class <- 1
 sil_trend_cor_meta$class[grep(paste0(qc_type), sil_trend_cor_meta$sampleID)] <- NA
 sil_trend_cor_meta$order <- c(1:nrow(sil_trend_cor_meta))
@@ -56,7 +58,7 @@ write_csv(x = sil_trend_cor_meta_2,
 #create data for statTarget::shiftCor
 sil_trend_cor_data <- sil_trend
 # colnames(sil_trend_cor_data) <- gsub("[():]", "_", colnames(sil_trend_cor_data))
-sil_trend_cor_data <- sil_trend_cor_meta %>% select(sampleID, sample) %>% right_join(sil_trend_cor_data, by = 'sampleID') %>% select(-sampleID, -run_order, -type, -plateID)
+sil_trend_cor_data <- sil_trend_cor_meta %>% select(sampleID, sample) %>% right_join(sil_trend_cor_data, by = 'sampleID') %>% select(sample, contains("x"))
 sil_trend_cor_data_2 <- as_tibble(cbind(nms = names(sil_trend_cor_data), t(sil_trend_cor_data)))
 colnames(sil_trend_cor_data_2) <- sil_trend_cor_data_2[1,]
 sil_trend_cor_data_2 <- sil_trend_cor_data_2[-1,]
