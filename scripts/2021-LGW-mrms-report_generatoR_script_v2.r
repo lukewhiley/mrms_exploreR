@@ -75,10 +75,15 @@ if(intensity_threshold_ltr == "both"){
 paste0("QC check 1: ", nrow(percentage_of_zero_plot_data_nc %>% filter(pass == "pass")), " passed QC check and had < 50% zero values.  ", nrow(percentage_of_zero_plot_data_nc %>% filter(pass == "fail")), " failed QC check and had > 50% zero values")
 #'
 #'
-#' ### 4. Creation of response values and response ratio QC check
-#' Following the creation of a response ratio with an appropriate internal standard (as pre-defined by the user) features are removed at this QC checkpoint if the percentage relative standard deviation (%RSD) was greater than 30% in the LTR QC samples
+#' ### QC1 visualization
+#' 
+QC_p_1_nc
 #'
-#'  
+#'
+#'
+#' ### 4. % RSD evaluation in replicate analysis of a QC sample
+#' 
+#' 
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 
 print(paste(nrow(rsd_plot_data_nc)-length(which(rsd_plot_data_nc$rsd_loop_rsd < 30)), " lipid targets had a LTR RSD of > 30%", sep=""))
@@ -87,6 +92,12 @@ print(paste("Total number of lipid target response ratios with with an LTR RSD o
 print(paste("Total number of lipid target response ratios with with an LTR RSD of <15% =", length(which(rsd_plot_data_nc$rsd_loop_rsd < 15))))
 print(paste("Total number of lipid target response ratios with with an LTR RSD of <10% =", length(which(rsd_plot_data_nc$rsd_loop_rsd < 10))))
 
+#'
+#'
+#' ### QC2 visualization
+#'
+#'
+QC_p_2_nc
 #'
 #'
 #'

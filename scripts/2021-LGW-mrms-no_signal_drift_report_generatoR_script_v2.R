@@ -17,12 +17,9 @@ print(paste0("There are ", mrms_exploreR_data$data_unprocessed$plateID %>% uniqu
 print(paste0("There are a total of ", total_data_points, " data points"))
 print(paste0(tota_percentage_zero_values, " % of total data points are missing or are a 0 value"))
 #'
-#'
-#'#'### MRMS heatmap to visualise missing values
+#'### MRMS heatmap to visualise missing values
 #'
 mrms_heatmap
-#'
-#'
 #'
 #' ### 2. Total ion count (TIC) quality control check
 #' 
@@ -75,32 +72,45 @@ if(intensity_threshold_ltr == "both"){
   print(paste("An MRMS feature was kept in the dataset if it was present in ", intensity_threshold_percentage, " % of both study samples and QC samples with a signal intensity (peak height) greater than ", intensity_threshold, " counts", sep = ""))
 }
 
-paste0("QC check 1: ", nrow(percentage_of_zero_plot_data_pass), " passed QC check and had < 50% zero values.  ", nrow(percentage_of_zero_plot_data_fail), " failed QC check and had > 50% zero values")
+paste0("QC check 1: ", nrow(percentage_of_zero_plot_data_nc %>% filter(pass == "pass")), " passed QC check and had < 50% zero values.  ", nrow(percentage_of_zero_plot_data_nc %>% filter(pass == "fail")), " failed QC check and had > 50% zero values")
 #'
 #'
-#' ### 4. Creation of response values and response ratio QC check
-#' Following the creation of a response ratio with an appropriate internal standard (as pre-defined by the user) features are removed at this QC checkpoint if the percentage relative standard deviation (%RSD) was greater than 30% in the LTR QC samples
-#'
-#'  
-#+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
-
-print(paste(nrow(rsd_plot_data)-length(which(rsd_plot_data$rsd_loop_rsd < 30)), " lipid targets had a LTR RSD of > 30%", sep=""))
-print(paste("Total number of lipid target response ratios with with an LTR RSD of <30% =", length(which(rsd_plot_data$rsd_loop_rsd < 30))))
-print(paste("Total number of lipid target response ratios with with an LTR RSD of <20% =", length(which(rsd_plot_data$rsd_loop_rsd < 20))))
-print(paste("Total number of lipid target response ratios with with an LTR RSD of <15% =", length(which(rsd_plot_data$rsd_loop_rsd < 15))))
-print(paste("Total number of lipid target response ratios with with an LTR RSD of <10% =", length(which(rsd_plot_data$rsd_loop_rsd < 10))))
-
-#'
-#'
-#'
-#' ### 6. PCA plot to visualize final dataset variance (LTR and samples)
+#' ### QC1 visualization
 #' 
+QC_p_1_nc
+#'
+#'
+#'
+#' ### 4. % RSD evaluation in replicate analysis of a QC sample
 #' 
 #' 
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 
-print(paste("For creating the QC PCA plots",  pca_scale_used_1, "scaling was used"))
+print(paste(nrow(rsd_plot_data_nc)-length(which(rsd_plot_data_nc$rsd_loop_rsd < 30)), " lipid targets had a LTR RSD of > 30%", sep=""))
+print(paste("Total number of lipid target response ratios with with an LTR RSD of <30% =", length(which(rsd_plot_data_nc$rsd_loop_rsd < 30))))
+print(paste("Total number of lipid target response ratios with with an LTR RSD of <20% =", length(which(rsd_plot_data_nc$rsd_loop_rsd < 20))))
+print(paste("Total number of lipid target response ratios with with an LTR RSD of <15% =", length(which(rsd_plot_data_nc$rsd_loop_rsd < 15))))
+print(paste("Total number of lipid target response ratios with with an LTR RSD of <10% =", length(which(rsd_plot_data_nc$rsd_loop_rsd < 10))))
+
+#'
+#'
+#' ### QC2 visualization
+#'
+#'
+QC_p_2_nc
+#'
+#'
+#'
+#' ### 5. PCA plot to visualize final dataset variance (LTR and samples)
+#' 
+#' 
+#' 
+#+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
+
+print(paste("For creating the QC PCA plots Pareto scaling was used"))
 print(paste("PCA plot created using ",  mrms_exploreR_data$data_tic_filtered_qc_filtered %>% select(contains("x")) %>% ncol(), "MRMS features in the final dataset" ))
 QC_PCA_1_nc
 
 
+#'
+#'
