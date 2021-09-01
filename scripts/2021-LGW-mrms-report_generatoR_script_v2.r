@@ -203,8 +203,6 @@ print(paste0("PCA created using ",
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 QC_PCA_1_c
 #'
-#'
-#'
 #' PCA coloured by plateID
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 QC_PCA_2_c
