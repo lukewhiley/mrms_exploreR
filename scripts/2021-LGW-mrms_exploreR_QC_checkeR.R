@@ -124,7 +124,7 @@ if(intensity_threshold_ltr != "PQC" & intensity_threshold_ltr != "LTR"){dlg_mess
 if(intensity_threshold_ltr != "none"){
 
 QC_data <- mrms_exploreR_data$data_for_signal_QC_check %>%
-  filter(grepl(intensity_threshold_ltr, mrms_exploreR_data$data_for_signal_QC_check$type))
+  filter(grepl(qc_type, mrms_exploreR_data$data_for_signal_QC_check$type))
 
 rsd_plot_data <- NULL
 
