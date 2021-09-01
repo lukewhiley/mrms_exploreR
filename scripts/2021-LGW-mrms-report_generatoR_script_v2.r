@@ -135,9 +135,19 @@ QC_PCA_2_nc
 #'
 #' ### 7. Data correction for signal drift
 #' 
-#' Using the selected replicate QC (PQC or LTR) samples the signals was corrected for batch and signal drift across the run
+#' Using the selected replicate QC (PQC or LTR) samples the signals was corrected for batch and signal drift across the run.
 #'  
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
+print(paste0("Signal correction was performed on ",
+             mrms_exploreR_data$data_for_signal_QC_check %>% select(contains("x")) %>% ncol(),
+             " MRMS features across ",
+             mrms_exploreR_data$data_for_signal_QC_check %>% filter(type == "Sample") %>% nrow(),
+             " samples, using ", 
+             mrms_exploreR_data$data_for_signal_QC_check %>% filter(type == qc_type) %>% nrow(),
+             " ",
+             paste0(qc_type),
+             " samples"
+             ))
 
 if(signal_drift_method == "loess"){
 print(paste("For correction of the signal drift a loess method (QC-RLSC) was employed using the statTarget package (bioconductor)"))
