@@ -25,13 +25,13 @@ print(paste0("There are a total of ", total_data_points, " data points"))
 print(paste0(total_percentage_zero_values, " % of total data points are missing or are a 0 value"))
 #'
 #'### MRMS heatmap to visualise missing values
-#+ echo=FALSE, message=FALSE, fig.width=8, fig.height=5
 #' The following heatmap shows Log10 intensity of each feature in each sample.
+#' #+ echo=FALSE, message=FALSE, fig.width=8, fig.height=5
 mrms_heatmap
 #'
 #' ### 3. Total ion count (TIC) quality control check
 #' 
-#' The first QC check summed the feture intensity of every MRMS feature to produce a total ion count signal for each sample. The check is used to identify those samples that:  
+#' The first QC check summed the feature intensity of every MRMS feature to produce a total ion count signal for each sample. The check is used to identify those samples that:  
 #' 
 #' * contained low/no total signal. Suggesting a preparation error where low volume of the sample had been added to the well or excessive extraction solvent had been added
 #' 
