@@ -43,7 +43,7 @@ mrms_heatmap
 #' 
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 print(paste0("Samples were considered outliers if their TIC was outside ", temp_answer_tic_nc, " % of the median "))
-print(paste0(nrow(tic_qc_fail), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr)," of which were ", qc_type ,  ". These were removed from the dataset."))
+print(paste0(nrow(tic_qc_fail_nc), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr_nc)," of which were ", qc_type ,  ". These were removed from the dataset."))
 print(paste0("The dataset now contains ", nrow(mrms_exploreR_data$data_tic_filtered), " samples"))
 tic_check_p_nc 
 #'
@@ -157,8 +157,15 @@ if(signal_drift_method == "RF"){
   print(paste("For correction of the signal drift a Random Forest method (QC-RFSC) was employed using the statTarget package (bioconductor"))
 }
 
-
-
+#' ### 8. Signal correction results
+#' The below plot represents the total ion count of each sample following the signal correction.
+#+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
+print(paste0("Samples were considered outliers if their TIC was outside ", temp_answer_tic_c, " % of the median "))
+print(paste0(nrow(tic_qc_fail_c), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr_c)," of which were ", qc_type ,  ". These were removed from the dataset."))
+print(paste0("The dataset now contains ", nrow(mrms_exploreR_data$data_tic_filtered), " samples"))
+tic_check_p_nc 
+#' 
+#' Following signal correction a % RSD filter in the replicate QC samples was applied to assess the performance of each feature across the total run
 print(paste(nrow(rsd_plot_data)-length(which(rsd_plot_data$rsd_loop_rsd < 30)), " MRMS features had a LTR RSD of > 30%", sep=""))
 print(paste("Total number of MRMS features with an LTR RSD of <30% =", length(which(rsd_plot_data$rsd_loop_rsd < 30))))
 print(paste("Total number of MRMS feature with an LTR RSD of <20% =", length(which(rsd_plot_data$rsd_loop_rsd < 20))))

@@ -96,6 +96,8 @@ kable(tic_qc_fail,
       caption = paste0(nrow(tic_qc_fail), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr),"  were QCs."))
 
 tic_check_p_nc <- tic_check_p; tic_check_p_nc
+tic_qc_fail_nc <- tic_qc_fail
+tic_qc_fail_ltr_nc <- tic_qc_fail_ltr
 
 temp_answer_tic_nc <- temp_answer_tic
 print(paste0("Samples were considered outliers if their TIC was outside ", temp_answer_tic_nc, " % of the median "))
@@ -209,6 +211,8 @@ if(temp_answer == paste0(qc_type)){mrms_exploreR_data$corrected_data_tic_filtere
 if(temp_answer == "none"){mrms_exploreR_data$corrected_data_tic_filtered <- mrms_exploreR_data$data_for_TIC_QC_check}
 
 tic_check_p_c <- tic_check_p; tic_check_p_c
+tic_qc_fail_c <- tic_qc_fail
+tic_qc_fail_ltr_c <- tic_qc_fail_ltr
 
 kable(tic_qc_fail,
       caption = paste0(nrow(tic_qc_fail), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr),"  were QCs."))
