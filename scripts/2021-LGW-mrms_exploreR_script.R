@@ -39,8 +39,7 @@ while(temp_answer != "yes"){
 
 
 # read in master data
-dlg_message("Read in data - Select the CSV file now")
-mrms_exploreR_data[["master_data"]] <- read_csv(file = file.choose(.)) %>% clean_names
+dlg_message("Read in data - Select the CSV file now"); mrms_exploreR_data[["master_data"]] <- read_csv(file = file.choose(.)) %>% clean_names
 
 
 mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["master_data"]] %>%
@@ -49,6 +48,14 @@ mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["master_data"]] 
 
 mrms_exploreR_data$sampleID <- mrms_exploreR_data[["data_unprocessed"]]$sampleID %>% unique() # create list of sample IDs
 mrms_exploreR_data$feature <- mrms_exploreR_data[["data_unprocessed"]] %>% select(contains("x")) %>% names() # create list of mrms features
+
+#remove bogus samples
+mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("conditioning", sampleID))
+mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("burnin", sampleID))
+mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("Burnin", sampleID))
+mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("restart", sampleID))
+mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("Restart", sampleID))
+
 
 project_run_order <- mrms_exploreR_data[["data_unprocessed"]] %>% select(sampleID)
 project_run_order$plateID <- rep("NA", nrow(project_run_order))
@@ -107,11 +114,6 @@ if(temp_answer_2 == "no"){
 
 mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% add_column(mrms_exploreR_data[["data_unprocessed"]]$run_order, .before = 3, .name_repair = "minimal") %>% select(-run_order)
 colnames(mrms_exploreR_data[["data_unprocessed"]])[3] <- "run_order"
-
-
-mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("conditioning", sampleID))
-mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("burnin", sampleID))
-mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("restart", sampleID))
 
 new_project_run_order <- new_project_run_order %>% filter(!grepl("conditioning", sampleID))
 plateID <- mrms_exploreR_data[["data_unprocessed"]]$plateID
