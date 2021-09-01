@@ -20,7 +20,7 @@ while(is.na(intensity_threshold_percentage)) {
 intensity_threshold_ltr <- "blank"
 
 while(intensity_threshold_ltr != "samples" & intensity_threshold_ltr != qc_type & intensity_threshold_ltr != "all") {
-  intensity_threshold_ltr <- dlgInput(paste0("Do you want to apply the filtering using samples/", qc_type ,"/PQC/all. Recommended default is all"), paste0("samples/", qc_type, "/all"))$res
+  intensity_threshold_ltr <- dlgInput(paste0("Do you want to apply the filtering using samples/", qc_type ,"/all. Recommended default is all"), paste0("samples/", qc_type, "/all"))$res
 }
 
 
