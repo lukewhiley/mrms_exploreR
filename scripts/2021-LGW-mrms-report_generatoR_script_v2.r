@@ -78,9 +78,8 @@ paste0("QC check 1: ", nrow(percentage_of_zero_plot_data_nc %>% filter(pass == "
 #'
 #'
 #' ### QC1 visualization
-#' 
 #'The below plot displays the % of missing values for each feature. Feature index is ordered by % of missing values.
-print(paste(nrow(rsd_plot_data_nc)-length(which(rsd_plot_data_nc$rsd_loop_rsd < 30)), " MRMS features had a LTR RSD of > 30%", sep=""))
+#+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 QC_p_1_nc
 #'
 #'
@@ -99,8 +98,8 @@ print(paste("Total number of MRMS feature with an LTR RSD of <10% =", length(whi
 #'
 #'
 #' ### QC2 visualization
-#'
-#'
+#'The below plot displays the % RSD of each of the remaining features in the replicate QC samples. Feature index is ordered by RSD%.
+#+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 QC_p_2_nc
 #'
 #'
