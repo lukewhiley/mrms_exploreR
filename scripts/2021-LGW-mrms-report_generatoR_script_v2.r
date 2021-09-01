@@ -70,7 +70,7 @@ if(intensity_threshold_ltr == "samples"){
   print(paste("An MRMS feature was kept in the dataset if it was present in ", intensity_threshold_percentage, " % of study ",  intensity_threshold_ltr, " (not LTR or PQC) with a signal intensity (peak height) greater than ", intensity_threshold, " counts", sep = ""))
 }
 
-if(intensity_threshold_ltr == "both"){
+if(intensity_threshold_ltr == "all"){
   print(paste("An MRMS feature was kept in the dataset if it was present in ", intensity_threshold_percentage, " % of both study samples and QC samples with a signal intensity (peak height) greater than ", intensity_threshold, " counts", sep = ""))
 }
 
