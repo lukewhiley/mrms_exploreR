@@ -155,7 +155,9 @@ print(paste("Total number of MRMS feature with an LTR RSD of <10% =", length(whi
 #'
 #' ### Corrected QC visualization
 #'
+#'Plot displaying the % of missing values for each freature. Feature index is ordered by % of missing values.
 #'
+#+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 QC_p_2_c
 #'
 #'
