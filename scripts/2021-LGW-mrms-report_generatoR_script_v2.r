@@ -162,7 +162,7 @@ if(signal_drift_method == "RF"){
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 print(paste0("Samples were considered outliers if their TIC was outside ", temp_answer_tic_c, " % of the median "))
 print(paste0(nrow(tic_qc_fail_c), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr_c)," of which were ", qc_type ,  ". These were removed from the dataset."))
-print(paste0("The dataset now contains ", nrow(mrms_exploreR_data$data_tic_filtered), " samples"))
+print(paste0("The dataset now contains ", nrow(mrms_exploreR_data$corrected_data_tic_filtered), " samples"))
 tic_check_p_nc 
 #' 
 #' Following signal correction a % RSD filter in the replicate QC samples was applied to assess the performance of each feature across the total run
@@ -171,15 +171,12 @@ print(paste("Total number of MRMS features with an LTR RSD of <30% =", length(wh
 print(paste("Total number of MRMS feature with an LTR RSD of <20% =", length(which(rsd_plot_data$rsd_loop_rsd < 20))))
 print(paste("Total number of MRMS feature with an LTR RSD of <15% =", length(which(rsd_plot_data$rsd_loop_rsd < 15))))
 print(paste("Total number of MRMS feature with an LTR RSD of <10% =", length(which(rsd_plot_data$rsd_loop_rsd < 10))))
-
-
-
 #'
 #'
 #'
 #' ### Corrected QC visualization
 #'
-#'Plot displaying the % of missing values for each feature following signal drift correction. Feature index is ordered by % of missing values.
+#'The below plot displays the % RSD post-signal correction of each of the remaining features in the replicate QC samples. Feature index is ordered by RSD%.
 #'
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 QC_p_2_c
