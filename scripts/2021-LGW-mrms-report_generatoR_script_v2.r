@@ -31,9 +31,9 @@ mrms_heatmap
 #'
 #' ### 3. Total ion count (TIC) quality control check
 #' 
-#' The first QC check summed the peak area of every MRMS feature to produce a total ion count signal for each sample. The check is used to identify those samples that:  
+#' The first QC check summed the feture intensity of every MRMS feature to produce a total ion count signal for each sample. The check is used to identify those samples that:  
 #' 
-#' * contained low/no signal. Suggesting a preparation error where low volume of the sample had been added to the well or excessive extraction solvent had been added
+#' * contained low/no total signal. Suggesting a preparation error where low volume of the sample had been added to the well or excessive extraction solvent had been added
 #' 
 #' 
 #' 
@@ -43,7 +43,7 @@ mrms_heatmap
 #' 
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 print(paste0("Samples were considered outliers if their TIC was outside ", temp_answer_tic_nc, " % of the median "))
-print(paste0(nrow(tic_qc_fail), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr)," of which were QCs.  These have been removed from the dataset."))
+print(paste0(nrow(tic_qc_fail), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr)," of which were ", qc_type ,  ". These were removed from the dataset."))
 print(paste0("The dataset now contains ", nrow(mrms_exploreR_data$data_tic_filtered), " samples"))
 tic_check_p_nc 
 #'
