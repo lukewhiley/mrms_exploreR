@@ -164,7 +164,7 @@ if(signal_drift_method == "RF"){
 print(paste0("Samples were considered outliers if their TIC was outside ", temp_answer_tic_c, " % of the median "))
 print(paste0(nrow(tic_qc_fail_c), " samples FAILED the TIC QC check, ", nrow(tic_qc_fail_ltr_c)," of which were ", qc_type ,  ". These were removed from the dataset."))
 print(paste0("The dataset now contains ", nrow(mrms_exploreR_data$corrected_data_tic_filtered), " samples"))
-tic_check_p_nc 
+tic_check_p_c 
 #' 
 #' Following signal correction a % RSD filter in the replicate QC samples was applied to assess the performance of each feature across the total run
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
