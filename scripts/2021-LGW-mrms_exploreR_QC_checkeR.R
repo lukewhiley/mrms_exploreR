@@ -118,10 +118,10 @@ dlg_message(paste0("Check 2 - Evaluation of feature variation in replicate QC sa
 #   intensity_threshold_ltr <- dlgInput(paste0("Did you use an LTR/PQC/none."), paste0("LTR/PQC/none"))$res
 # }
 
-if(intensity_threshold_ltr != "PQC" & intensity_threshold_ltr != "LTR"){dlg_message(paste0("no QC selected. No RSD filter is possible. Move to next section."))}
+if(qc_type != "PQC" & qc_type != "LTR"){dlg_message(paste0("no QC selected. No RSD filter is possible. Move to next section."))}
 
 
-if(intensity_threshold_ltr != "none"){
+if(qc_type != "none"){
 
 QC_data <- mrms_exploreR_data$data_for_signal_QC_check %>%
   filter(grepl(qc_type, mrms_exploreR_data$data_for_signal_QC_check$type))
@@ -217,5 +217,5 @@ dlg_message(paste0("QC check 1: ",
 
 remove_qc <- "blank"
 while(remove_qc != "remove" & remove_qc != "keep") {
-  remove_qc <- dlgInput("Do you want to remove the failed features?", "remove/keep")$res
+  remove_qc <- dlgInput("Do you want to remove the failed features?", "keep/remove")$res
 }
