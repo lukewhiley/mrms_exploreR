@@ -54,8 +54,8 @@ tic_check_p_nc
 #'
 #'
 #'
-#' ### 4. MRMS feature quality control check
-#' The QC checks now focus on individual MRMS features. Each m/z feature was assessed and were subsequently filtered out using a user defined signal intensity threshold and appearance frequency.
+#' ### 4. Individual feature intensity threshold QC check
+#' Individual feature QC check 1. Each m/z feature was assessed and were subsequently filtered out using a user defined signal intensity threshold and appearance frequency.
 #' For example the default threshold is to spot zero values and to only keep features with a signal intensity greater than 0 counts in over 50% of samples
 #'
 #'
@@ -74,7 +74,8 @@ if(intensity_threshold_ltr == "all"){
   print(paste("An MRMS feature was kept in the dataset if it was present in ", intensity_threshold_percentage, " % of both study samples and QC samples with a signal intensity (peak height) greater than ", intensity_threshold, " counts", sep = ""))
 }
 
-paste0("QC check 1: ", nrow(percentage_of_zero_plot_data_nc %>% filter(pass == "pass")), " passed QC check and had < 50% zero values.  ", nrow(percentage_of_zero_plot_data_nc %>% filter(pass == "fail")), " failed QC check and had > 50% zero values")
+paste0("QC check 1: ", nrow(percentage_of_zero_plot_data_nc %>% filter(pass == "pass")), " passed the QC check and had < 50% zero values.  ", nrow(percentage_of_zero_plot_data_nc %>% filter(pass == "fail")), " failed the QC check and had > 50% zero values")
+print(paste0("The dataset now contains ", nrow(percentage_of_zero_plot_data_nc %>% filter(pass == "pass")), " features"))
 #'
 #'
 #' ### QC1 visualization
@@ -85,9 +86,10 @@ QC_p_1_nc
 #'
 #'
 #' ### 5. % RSD evaluation in replicate analysis of a QC sample
-#' 
+#' Individual feature QC check 2. Each m/z feature that passed QC check 4 was assessed for %RSD in replicate analysis of a QC sample. Features were subsequently filtered if the %RSD was greater than 30%.
 #' 
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
+print(paste0("The QC check was perfromed on ", nrow(percentage_of_zero_plot_data_nc %>% filter(pass == "pass")), " features which passed QC check 1."))
 
 print(paste(nrow(rsd_plot_data_nc)-length(which(rsd_plot_data_nc$rsd_loop_rsd < 30)), " MRMS features had a LTR RSD of > 30%", sep=""))
 print(paste("Total number of MRMS feature with an LTR RSD of <30% =", length(which(rsd_plot_data_nc$rsd_loop_rsd < 30))))
