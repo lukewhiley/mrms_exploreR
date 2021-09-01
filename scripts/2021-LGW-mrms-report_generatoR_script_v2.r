@@ -26,6 +26,7 @@ print(paste0(total_percentage_zero_values, " % of total data points are missing 
 #'
 #'### MRMS heatmap to visualise missing values
 #+ echo=FALSE, message=FALSE, fig.width=8, fig.height=5
+#' The following heatmap shows Log10 intensity of each feature in each sample.
 mrms_heatmap
 #'
 #' ### 3. Total ion count (TIC) quality control check
@@ -41,15 +42,11 @@ mrms_heatmap
 #' This plot is the result of summing all the MRMS feature peak areas to form a single total ion count signal. All samples are plotted including LTR samples.
 #' 
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
-tic_check_p_nc 
-#'
-#'
-#+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 print(paste0("Samples were considered outliers if their TIC was outside ", temp_answer_tic_nc, " % of the median "))
 print(paste0(nrow(tic_qc_fail), " samples FAILED the TIC QC check  ", nrow(tic_qc_fail_ltr)," of which were QCs.  These have been removed from the dataset."))
 print(paste0("The dataset now contains ", nrow(mrms_exploreR_data$data_tic_filtered), " samples"))
+tic_check_p_nc 
 #'
-#' The following samples were removed from the dataset at this check point
 #'  
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4 
 #knitr::kable(tic_qc_fail)
@@ -58,7 +55,7 @@ print(paste0("The dataset now contains ", nrow(mrms_exploreR_data$data_tic_filte
 #'
 #'
 #' ### 4. MRMS feature quality control check
-#' The QC checks now switched to the MRMS features. m/z features were filtered out due to a user defined signal intensity and appearance frequency.
+#' The QC checks now focus on individual MRMS features. Each m/z feature was assessed and were subsequently filtered out using a user defined signal intensity threshold and appearance frequency.
 #' For example the default threshold is to spot zero values and to only keep features with a signal intensity greater than 0 counts in over 50% of samples
 #'
 #'
@@ -68,9 +65,6 @@ if(intensity_threshold_ltr == "LTR" | intensity_threshold_ltr == "PQC"){
   print(paste("An MRMS feature was kept in the dataset if it was present in ", intensity_threshold_percentage, " % of ",  intensity_threshold_ltr, " samples with a signal intensity (peak height) greater than ", intensity_threshold, " counts", sep = ""))
 }
 
-# if(intensity_threshold_ltr == "PQC"){
-#   print(paste("An MRMS feature was kept in the dataset if it was present in ", intensity_threshold_percentage, " % of ",  intensity_threshold_ltr, " samples with a signal intensity (peak height) greater than ", intensity_threshold, " counts", sep = ""))
-# }
 
 if(intensity_threshold_ltr == "samples"){
   print(paste("An MRMS feature was kept in the dataset if it was present in ", intensity_threshold_percentage, " % of study ",  intensity_threshold_ltr, " (not LTR or PQC) with a signal intensity (peak height) greater than ", intensity_threshold, " counts", sep = ""))
@@ -85,6 +79,8 @@ paste0("QC check 1: ", nrow(percentage_of_zero_plot_data_nc %>% filter(pass == "
 #'
 #' ### QC1 visualization
 #' 
+#'The below plot displays the % of missing values for each feature. Feature index is ordered by % of missing values.
+print(paste(nrow(rsd_plot_data_nc)-length(which(rsd_plot_data_nc$rsd_loop_rsd < 30)), " MRMS features had a LTR RSD of > 30%", sep=""))
 QC_p_1_nc
 #'
 #'
@@ -155,7 +151,7 @@ print(paste("Total number of MRMS feature with an LTR RSD of <10% =", length(whi
 #'
 #' ### Corrected QC visualization
 #'
-#'Plot displaying the % of missing values for each freature. Feature index is ordered by % of missing values.
+#'Plot displaying the % of missing values for each feature. Feature index is ordered by % of missing values.
 #'
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 QC_p_2_c

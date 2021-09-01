@@ -19,17 +19,12 @@ while(is.na(intensity_threshold_percentage)) {
 # user choice should filter intensity be set for samples/LTR/both
 intensity_threshold_ltr <- "blank"
 
-while(intensity_threshold_ltr != "keep" & intensity_threshold_ltr != "change") {
-  intensity_threshold_ltr <- dlgInput(paste0("You are currently using ", qc_type, " for your QC.  Do you want to keep or change QC type?"), paste0("keep/change"))$res
+while(intensity_threshold_ltr != "samples" & intensity_threshold_ltr != qc_type & intensity_threshold_ltr != "all") {
+  intensity_threshold_ltr <- dlgInput(paste0("Do you want to apply the filtering using samples/", qc_type ,"/PQC/all. Recommended default is all"), paste0("samples/", qc_type, "/all"))$res
 }
 
-if(intensity_threshold_ltr == "keep"){intensity_threshold_ltr <- "PQC"}
 
-while(intensity_threshold_ltr != "samples" & intensity_threshold_ltr != "LTR" & intensity_threshold_ltr != "PQC" & intensity_threshold_ltr != "all") {
-  intensity_threshold_ltr <- dlgInput(paste0("Do you want to apply the filtering using samples/LTR/PQC/all. Recommended default is all"), paste0("samples/LTR/PQC/all"))$res
-}
-
-#set up empty listå
+#set up empty list
 failed_metabolites_zero <- NULL
 
 percentage_of_zero_plot_data <- NULL
