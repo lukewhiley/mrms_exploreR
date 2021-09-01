@@ -51,10 +51,6 @@ mrms_exploreR_data$feature <- mrms_exploreR_data[["data_unprocessed"]] %>% selec
 
 #remove bogus samples
 mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("conditioning", sampleID))
-mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("burnin", sampleID))
-mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("Burnin", sampleID))
-mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("restart", sampleID))
-mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("Restart", sampleID))
 
 
 project_run_order <- mrms_exploreR_data[["data_unprocessed"]] %>% select(sampleID)
