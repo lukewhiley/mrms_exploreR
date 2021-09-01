@@ -26,7 +26,7 @@ print(paste0(total_percentage_zero_values, " % of total data points are missing 
 #'
 #'### MRMS heatmap to visualise missing values
 #' The following heatmap shows Log10 intensity of each feature in each sample.
-#' #+ echo=FALSE, message=FALSE, fig.width=8, fig.height=5
+#+ echo=FALSE, message=FALSE, fig.width=8, fig.height=5
 mrms_heatmap
 #'
 #' ### 3. Total ion count (TIC) quality control check
