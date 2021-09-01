@@ -49,7 +49,7 @@ mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["master_data"]] 
 mrms_exploreR_data$sampleID <- mrms_exploreR_data[["data_unprocessed"]]$sampleID %>% unique() # create list of sample IDs
 mrms_exploreR_data$feature <- mrms_exploreR_data[["data_unprocessed"]] %>% select(contains("x")) %>% names() # create list of mrms features
 
-#remove bogus samples
+#remove conditioning samples
 mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("conditioning", sampleID))
 
 
