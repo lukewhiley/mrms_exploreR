@@ -124,13 +124,13 @@ print(paste0("PCA created using ",
 print(paste0("coloured by sample/QC"))
 
 #' PCA coloured by Sample type
-#' #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
+#+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 QC_PCA_1_nc
 #'
 #'
 #'
 #' PCA coloured by plateID
-#' #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
+#+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 QC_PCA_2_nc
 #'
 #'
