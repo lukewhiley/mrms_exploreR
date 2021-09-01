@@ -104,26 +104,36 @@ QC_p_2_nc
 #'
 #'
 #'
-#' ### 6. PCA plot to visualize final dataset variance (LTR and samples)
-#' 
+#' ### 6. PCA to visualize final dataset variance (LTR and samples)
+#' PCA created with Pareto scaling
 #' 
 #' 
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
-print(paste0("For creating the QC PCA plots Pareto scaling was used"))
-print(paste0("PCA plot created using ",  mrms_exploreR_data$data_tic_filtered_qc_filtered %>% select(contains("x")) %>% ncol(), "MRMS features in the final dataset" ))
+print(paste0("PCA created using ",  
+             mrms_exploreR_data$data_tic_filtered_qc_filtered %>% filter(type == "Sample") %>% nrow(),
+             " samples, ",
+             mrms_exploreR_data$data_tic_filtered_qc_filtered %>% filter(type == qc_type) %>% nrow(),
+             " ",
+             qc_type,
+             " and ", 
+             mrms_exploreR_data$data_tic_filtered_qc_filtered %>% select(contains("x")) %>% ncol(), 
+             " MRMS features" ))
 print(paste0("coloured by sample/QC"))
+
+#' PCA coloured by Sample type
+#' #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 QC_PCA_1_nc
 #'
 #'
 #'
-#+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
-print(paste0("coloured by plate"))
+#' PCA coloured by plateID
+#' #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 QC_PCA_2_nc
 #'
 #'
 #' ### 7. Data correction for signal drift
 #' 
-#' Using the selected replicate QC (PQC or LTR) samples the signals was corrected for signal drift across the run
+#' Using the selected replicate QC (PQC or LTR) samples the signals was corrected for batch and signal drift across the run
 #'  
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 
@@ -150,27 +160,35 @@ print(paste("Total number of MRMS feature with an LTR RSD of <10% =", length(whi
 #'
 #' ### Corrected QC visualization
 #'
-#'Plot displaying the % of missing values for each feature. Feature index is ordered by % of missing values.
+#'Plot displaying the % of missing values for each feature following signal drift correction. Feature index is ordered by % of missing values.
 #'
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 QC_p_2_c
 #'
 #'
 #' ### 8. PCA plot to visualize final corrected dataset variance (replicate QC and samples)
-#' 
+#' PCA created with Pareto scaling
 #' 
 #' 
 #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
-print(paste0("For creating the QC PCA plots Pareto scaling was used"))
-print(paste0("PCA plot created using ",  mrms_exploreR_data$corrected_data_tic_filtered_qc_filtered %>% select(contains("x")) %>% ncol(), "MRMS features in the final dataset" ))
+print(paste0("PCA created using ",  
+             mrms_exploreR_data$data_tic_filtered_qc_filtered %>% filter(type == "Sample") %>% nrow(),
+             " samples, ",
+             mrms_exploreR_data$data_tic_filtered_qc_filtered %>% filter(type == qc_type) %>% nrow(),
+             " ",
+             qc_type,
+             " and ", 
+             mrms_exploreR_data$data_tic_filtered_qc_filtered %>% select(contains("x")) %>% ncol(), 
+             " MRMS features" ))
 print(paste0("coloured by sample/QC"))
+
+#' PCA coloured by Sample type
+#' #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 QC_PCA_1_c
 #'
 #'
 #'
-#+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
-print(paste0("coloured by plate"))
+#' PCA coloured by plateID
+#' #+ echo=FALSE, message=FALSE, fig.width=10, fig.height=4
 QC_PCA_2_c
-
-
-
+#'
