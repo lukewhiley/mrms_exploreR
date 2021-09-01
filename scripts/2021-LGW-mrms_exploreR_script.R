@@ -110,6 +110,8 @@ colnames(mrms_exploreR_data[["data_unprocessed"]])[3] <- "run_order"
 
 
 mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("conditioning", sampleID))
+mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("burnin", sampleID))
+mrms_exploreR_data[["data_unprocessed"]] <- mrms_exploreR_data[["data_unprocessed"]] %>% filter(!grepl("restart", sampleID))
 
 new_project_run_order <- new_project_run_order %>% filter(!grepl("conditioning", sampleID))
 plateID <- mrms_exploreR_data[["data_unprocessed"]]$plateID
