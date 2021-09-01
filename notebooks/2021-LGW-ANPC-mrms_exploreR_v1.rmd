@@ -353,7 +353,7 @@ browseURL(paste0(project_dir_html, "/",project_name, "_", user_name, "_mrms_expl
 #           )
 # }
 
-dlg_message("Lipidomics pre-processing and QC complete. Thanks for using MRMS exploreR. TTFN.", type = 'ok')
+dlg_message("MRMS pre-processing and QC complete. Thanks for using MRMS exploreR. TTFN.", type = 'ok')
 dlg_message("PS. an official html report can be found in the project folder", type = 'ok')
 
 ```
