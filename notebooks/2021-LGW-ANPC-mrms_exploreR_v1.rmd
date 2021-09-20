@@ -149,13 +149,13 @@ Quick PCA
 
 
 QC_PCA_1_nc <- lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$data_tic_filtered_qc_filtered,
-        FUNC_metabolite_list = mrms_exploreR_data$feature,
+        FUNC_metabolite_list = mrms_exploreR_data$data_tic_filtered_qc_filtered %>% select(contains("x")) %>% names(),
         FUNC_colour_by = "type",
         FUNC_plot_label = "sampleID",
         FUNC_scaling = "Pareto"); QC_PCA_1_nc
 
 QC_PCA_2_nc <- lgw_pca(FUNC_individual_multivariate_data = mrms_exploreR_data$data_tic_filtered_qc_filtered,
-        FUNC_metabolite_list = mrms_exploreR_data$feature,
+        FUNC_metabolite_list = mrms_exploreR_data$data_tic_filtered_qc_filtered %>% select(contains("x")) %>% names(),
         FUNC_colour_by = "plateID",
         FUNC_plot_label = "sampleID",
         FUNC_scaling = "Pareto"); QC_PCA_2_nc
